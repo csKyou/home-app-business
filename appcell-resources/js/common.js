@@ -44,7 +44,7 @@ cm.createProfileHeaderMenu = function() {
     html += '</a></td></tr>';
     html += '<tr><td class="sizeCaption">';
     //html += '<p class="ellipsisText">' + cm.user.cellUrl + '</p>';
-    html += '<p>Account: ' + cm.user.userName + '</p>';
+    html += '<p>' + mg.getMsg("00028") + ': ' + cm.user.userName + '</p>';
     html += '</td></tr>';
     $(".profile-menu").html(html);
 
@@ -779,10 +779,10 @@ cm.validateDisplayName = function(displayName, displayNameSpan,txtID) {
 		document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0005");
 		//this.showErrorIcon(txtID);
 		return false;
-	} else if (lenDisplayName != 0 && !(displayName.match(allowedLetters))) {
-		document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
-		//this.showErrorIcon(txtID);
-		return false;
+	//} else if (lenDisplayName != 0 && !(displayName.match(allowedLetters))) {
+	//	document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
+	//	//this.showErrorIcon(txtID);
+	//	return false;
 	} else if(lenDisplayName != 0 && (specialchar.toString().indexOf(displayName.substring(0,1)) >= 0)){
 		document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
 		//this.showErrorIcon(txtID);

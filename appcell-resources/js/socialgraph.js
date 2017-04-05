@@ -363,8 +363,8 @@ sg.dispExtCellRoleList = function(json, exturl) {
     //$("#dvExtCellLinkRole").append(html);
   }
   html += '<div class="list-group-item">';
-  html += '<a class="allToggle" href="#" onClick="cm.dispAssignRole(\'ext\')">＋' + mg.getMsg("00025") + '</a></div>';
-  //html = '<a class="list-group-item" href="#" data-toggle="modal" data-target="#modal-add-extcelllinkrole">＋' + mg.getMsg("00025") + '</a>';
+  html += '<a class="allToggle" href="#" onClick="cm.dispAssignRole(\'ext\')">＋ ' + mg.getMsg("00025") + '</a></div>';
+  //html = '<a class="list-group-item" href="#" data-toggle="modal" data-target="#modal-add-extcelllinkrole">＋ ' + mg.getMsg("00025") + '</a>';
   html += '</div>';
   $("#toggle-panel2").append(html);
 };
@@ -472,7 +472,7 @@ sg.dispRelationList = function(json) {
     html += '</a></td>';
     html += '</tr></table></div>';
     html += '<nav id="extCellRelMenu' + i + '"><ul class="extCellRelMenu"><div name="dvExtCellRelList" id="' + extRelID + '"></div><div class="list-group-item">';
-    html += '<a class="allToggle" href="#" onClick="sg.setLinkParamName(\'' + objRelation.Name + '\',\'' + boxName + '\')" data-toggle="modal" data-target="#modal-add-extcelllinkrelation">＋' + mg.getMsg("00022") + '</a></div></ul></nav>';
+    html += '<a class="allToggle" href="#" onClick="sg.setLinkParamName(\'' + objRelation.Name + '\',\'' + boxName + '\')" data-toggle="modal" data-target="#modal-add-extcelllinkrelation">＋ ' + mg.getMsg("00022") + '</a></div></ul></nav>';
     $("#dvExtCellList").append(html);
     sg.getRelLinkExtCell(objRelation.Name, relBoxName);
   }
@@ -482,8 +482,8 @@ sg.dispRelationList = function(json) {
   html += '<a class="accountToggle" id="relationLinkToRoleToggle" onClick="sg.slideToggle(\'extCellRelMenu\')">' + mg.getMsg("00023") + '</a>';
   html += '</div>';
   html += '<nav id="extCellRelMenu"><ul class="extCellRelMenu"><div name="dvExtCellRelList" id="dvExtCellRelList"></div>';
-  //html += '<div><a class="list-group-item" href="#" data-toggle="modal" data-target="#modal-add-extcell">＋' + mg.getMsg("00024") + '</a></div>';
-  html += '<div class="list-group-item"><a class="allToggle" href="#" onClick="sg.createAddExtCell()">＋' + mg.getMsg("00024") + '</a></div>';
+  //html += '<div><a class="list-group-item" href="#" data-toggle="modal" data-target="#modal-add-extcell">＋ ' + mg.getMsg("00024") + '</a></div>';
+  html += '<div class="list-group-item"><a class="allToggle" href="#" onClick="sg.createAddExtCell()">＋ ' + mg.getMsg("00024") + '</a></div>';
   html += '</ul></nav>';
   $("#dvExtCellList").append(html);
   sg.getExtCellList();
@@ -573,10 +573,10 @@ sg.validateName = function (displayName, displayNameSpan,txtID) {
                 document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0005");
                 //this.showErrorIcon(txtID);
                 return false;
-        } else if (lenDisplayName != 0 && !(displayName.match(allowedLetters))) {
-                document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
-                //this.showErrorIcon(txtID);
-                return false;
+        //} else if (lenDisplayName != 0 && !(displayName.match(allowedLetters))) {
+        //        document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
+        //        //this.showErrorIcon(txtID);
+        //        return false;
         } else if(lenDisplayName != 0 && (specialchar.toString().indexOf(displayName.substring(0,1)) >= 0)){
                 document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
                 //this.showErrorIcon(txtID);
