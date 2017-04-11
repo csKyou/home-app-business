@@ -21,16 +21,16 @@ st.initSettings = function() {
     // Set Title
     cm.setTitleMenu(mg.getMsg("00001"), true);
 
-    $('#b-edit-accconfirm-ok').on('click', function () { 
+    $('#b-edit-accconfirm-ok').on('click', function () {
         st.editAccount();
     });
     $('#b-del-account-ok').on('click', function () { st.restDeleteAccountAPI(); });
     $('#b-del-role-ok').on('click', function () { st.restDeleteRoleAPI(); });
     $('#b-del-acclinkrole-ok').on('click', function () { st.restDeleteAccountLinkRole(); });
-    $('#b-edit-relation-ok').on('click', function () { 
+    $('#b-edit-relation-ok').on('click', function () {
 
     });
-    $('#b-edit-relconfirm-ok').on('click', function () { 
+    $('#b-edit-relconfirm-ok').on('click', function () {
         st.editRelation();
     });
     $('#b-del-relation-ok').on('click', function () { st.restDeleteRelationAPI(); });
@@ -439,7 +439,7 @@ st.createApplicationList = function() {
 st.getApplicationList = function() {
     return $.ajax({
             type: "GET",
-            url: cm.user.baseUrl + 'market/__/applist.json',
+            url: cm.user.baseUrl + 'market/__/applistForBusiness.json',
             datatype: 'json',
             headers: {
               'Accept':'application/json'
@@ -656,7 +656,7 @@ st.operationRole = function() {
     } else {
         html += '<button type="button" class="btn btn-primary" id="b-add-role-ok" onClick="st.addRole();">Add</button>';
     }
-    
+
     html += '</div></div>';
     $("#setting-panel2").append(html);
     cm.getBoxList().done(function(data) {
@@ -742,7 +742,7 @@ st.dispRelationList = function(json) {
   results.sort(function(val1, val2) {
     return (val1.Name < val2.Name ? 1 : -1);
   })
-  
+
   var html = '';
   $("#setting-panel1").empty();
   html += '<div class="panel-body">';
@@ -1170,7 +1170,7 @@ st.validateURL = function(domainName,errorSpan,txtID) {
 	} else if (lenCellName != 0 && !(domainName.match(letters))) {
 		document.getElementById(errorSpan).innerHTML = mg.getMsg("E0005");
 		return false;
-	} 
+	}
 	document.getElementById(errorSpan).innerHTML = "";
 	return true;
 };
