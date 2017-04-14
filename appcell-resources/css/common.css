@@ -215,7 +215,7 @@ div.ins-app-name {
     /*left:32.5%;
     top:15%;*/
     overflow: hidden;
-    
+
     /*-webkit-box-shadow: 0px 0px 8px 0px rgba(50, 50, 50, 0.54);
     -moz-box-shadow:    0px 0px 8px 0px rgba(50, 50, 50, 0.54);
     box-shadow:         0px 0px 8px 0px rgba(50, 50, 50, 0.54);*/
@@ -253,7 +253,7 @@ div.ins-app-name {
         position:relative;
         /*left:5%;
         top:10%;*/
-        
+
         /*-webkit-box-shadow: 0px 0px 8px 0px rgba(50, 50, 50, 0.54);
         -moz-box-shadow:    0px 0px 8px 0px rgba(50, 50, 50, 0.54);
         box-shadow:         0px 0px 8px 0px rgba(50, 50, 50, 0.54);*/
@@ -404,7 +404,7 @@ textarea {
 }
 
 .modal{
-    top: 0%; 
+    top: 0%;
 }
 .modal-header .close {
     margin-top: 2px;
@@ -440,7 +440,7 @@ textarea {
 /* Heder Menu CSS */
 
 .header-menu {
-    background: #1a247f;
+    background: #777777;
     color: #FFFFFF;
 }
 
@@ -651,7 +651,7 @@ a.toggle{
         padding-bottom: 14px;
         padding-left: 16px;
         padding-right: 16px;
-        background: #1a247f;
+        background: #777777;
     }
     .profile-header {
         width:56px;
@@ -672,7 +672,7 @@ a.toggle{
         border-collapse: collapse;
         color: #333333;
     }
-    
+
     .sidemenu-lastitem {
         height: 32px;
         border-collapse: collapse;
