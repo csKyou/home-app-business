@@ -1,51 +1,56 @@
 <!DOCTYPE html>
 <html lang="ja">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Personium Cell</title>
-		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
-		<!--[if lt IE 9]>
-			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-                <!--<script src="https://demo.personium.io/HomeApplicationForBiz/__/js/common.js"></script>
-                <script src="https://demo.personium.io/HomeApplicationForBiz/__/js/settings.js"></script>
-                <script src="https://demo.personium.io/HomeApplicationForBiz/__/js/message_ja.js"></script>-->
-                <script src="../../appcell-resources/js/common.js"></script>
-                <script src="../../appcell-resources/js/settings.js"></script>
-                <script src="../../appcell-resources/js/message_ja.js"></script>
-		<link href='https://fonts.googleapis.com/css?family=Raleway:400,200' rel='stylesheet' type='text/css'>
-                <!--<link href='https://demo.personium.io/HomeApplicationForBiz/__/css/common.css' rel='stylesheet' type='text/css'>
-                <link href='https://demo.personium.io/HomeApplicationForBiz/__/css/settings.css' rel='stylesheet' type='text/css'>
-                <link href='https://demo.personium.io/HomeApplicationForBiz/__/css/main.css' rel='stylesheet' type='text/css'>-->
-                <link href='../../appcell-resources/css/common.css' rel='stylesheet' type='text/css'>
-                <link href='../../appcell-resources/css/settings.css' rel='stylesheet' type='text/css'>
-                <link href='../../appcell-resources/css/main.css' rel='stylesheet' type='text/css'>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Personium Cell</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <!--
+        <script src="https://demo.personium.io/HomeApplicationForBiz/__/js/common.js"></script>
+        <script src="https://demo.personium.io/HomeApplicationForBiz/__/js/settings.js"></script>
+        <script src="https://demo.personium.io/HomeApplicationForBiz/__/js/message_ja.js"></script>
+        -->
+        <script src="../../appcell-resources/js/common.js"></script>
+        <script src="../../appcell-resources/js/settings.js"></script>
+        <script src="../../appcell-resources/js/message_ja.js"></script>
+        <link href='https://fonts.googleapis.com/css?family=Raleway:400,200' rel='stylesheet' type='text/css'>
+        <!--
+        <link href='https://demo.personium.io/HomeApplicationForBiz/__/css/common.css' rel='stylesheet' type='text/css'>
+        <link href='https://demo.personium.io/HomeApplicationForBiz/__/css/settings.css' rel='stylesheet' type='text/css'>
+        <link href='https://demo.personium.io/HomeApplicationForBiz/__/css/main.css' rel='stylesheet' type='text/css'>
+        -->
+        <link href='../../appcell-resources/css/common.css' rel='stylesheet' type='text/css'>
+        <link href='../../appcell-resources/css/settings.css' rel='stylesheet' type='text/css'>
+        <link href='../../appcell-resources/css/main.css' rel='stylesheet' type='text/css'>
 <script type="text/javascript">
 //ha.user= JSON.parse(location.hash.substring(1));
 ha = {};
 
 ha.systemApps = [
-  {
-    "name": "コミュニティ",
-    "icon": "003lighticons-03full.png",
-    "url": "socialgraph.html",
-    "used": true
-  }, {
-    "name": "Biz App マーケット",
-    "icon": "001lighticons-31full.png",
-    "url": "applicationmarket.html",
-    "used": true
-  }
+    {
+        "name": "コミュニティ",
+        "icon": "003lighticons-03full.png",
+        "url": "socialgraph.html",
+        "used": true
+    }, {
+        "name": "Biz App マーケット",
+        "icon": "001lighticons-31full.png",
+        "url": "applicationmarket.html",
+        "used": true
+    }
 ];
 
 $(document).ready(function() {
     ha.deploySystemApps();
     ha.dispInsAppList();
+    ha.dispInformation();
     //createTitleHeader();
     cm.createProfileHeaderMenu();
     cm.createSideMenu();
@@ -54,23 +59,26 @@ $(document).ready(function() {
 });
 
 ha.deploySystemApps = function() {
-  var arrCount = 0;
-  for (var i in ha.systemApps) {
-    var app = ha.systemApps[i];
-    var html = '<div class="p-app" align="center"><a href="';
-    if (app.used) {
-        html += app.url;
-    } else {
-        html += "javascript:void(0)";
+    var arrCount = 0;
+    for (var i in ha.systemApps) {
+        var app = ha.systemApps[i];
+        var html = '<a href="';
+        if (app.used) {
+            html += app.url;
+        } else {
+            html += "javascript:void(0)";
+        }
+        html += '" class="p-app">'
+             + '<div class="p-app-icon">'
+             + '<img src="https://demo.personium.io/HomeApplicationForBiz/__/icons/' + app.icon + '" class="p-app-icon"/>'
+             + '</div>'
+             + '<div class="p-app-name">' + app.name + '</div>'
+             + '</a>';
+        $("#dashboard").append(html);
+        arrCount += 1;
     }
-    html += '" class="p-app-icon"><img src="https://demo.personium.io/HomeApplicationForBiz/__/icons/' + app.icon + '" class="p-app-icon"/></a>'
-         + '<div class="p-app-name">' + app.name + '</div>'
-         + '</div>';
-    $("#dashboard").append(html);
-    arrCount += 1;
-  }
 
-  $("#serviceCount").append(arrCount);
+    $("#serviceCount").append(arrCount);
 };
 
 ha.dispInsAppList = function() {
@@ -107,7 +115,13 @@ ha.dispInsAppListSchema = function(schema, boxName) {
                     }
                 }).always(function(data) {
                     //var html = '<div class="ins-app" align="center"><a class="ins-app-icon" onClick="cm.execApp(\'' + schema + '\', \'' + boxName + '\')" target="_blank"><img src = "' + imageSrc + '" class="ins-app-icon"></a><div class="ins-app-name">' + dispName + '</div></div>';
-                    var html = '<div class="ins-app" align="center"><a class="ins-app-icon" onClick="cm.execApp(\'' + schema + '\', \'' + boxName + '\')" target="_blank"><img src = "' + imageSrc + '" class="ins-app-icon"><span class="badge badgePos">' + msgCnt + '</span></a><div class="ins-app-name">' + dispName + '</div></div>';
+                    var html = '<a class="ins-app" onClick="cm.execApp(\'' + schema + '\', \'' + boxName + '\')" target="_blank">'
+                             + '<div class="ins-app-icon">'
+                             + '<img src = "' + imageSrc + '" class="ins-app-icon">'
+                             + '<span class="badge">' + msgCnt + '</span>'
+                             + '</div>'
+                             + '<div class="ins-app-name">' + dispName + '</div>'
+                             + '</a>';
                     $("#dashboard_ins").append(html);
                 });
             }
@@ -115,32 +129,48 @@ ha.dispInsAppListSchema = function(schema, boxName) {
     });
 };
 
+ha.dispInformation = function() {
+// 現状ダミー
+    var html = '<li>'
+             + '<a href="">'
+             + '<div class="list-icon">'
+             + '<img src="data:image/png;base64,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">'
+             + '</div>'
+             + '<div class="list-body">'
+             + '<div class="sizeBody">メンテナンスのお知らせ</div>'
+             + '<div class="sizeCaption">6/14 AM2:00-4:00にメンテナンスを行います。</div>'
+             + '</div>'
+             + '</a>'
+             + '</li>';
+    $("#information").append(html);
+};
+
 </script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
-	</head>
+    </head>
 
-<body>
-    <div class="container-fluid display-table">
-        <div class="row display-parent-div" id="displayParentDiv">
-            <div class="col-md-12 col-sm-12 display-table-cell v-align">
-                <!--<button type="button" class="slide-toggle">Slide Toggle</button> -->
-                <div class="row user-header">
-                    <!--<header>-->
-                        <div class="profile-menu">
-                        </div>
-                    <!--</header>-->
+    <body>
+        <div class="display-parent-div" id="displayParentDiv">
+            <!--<header>-->
+            <header class="profile-menu">
+            </header>
+            <!--</header>-->
+            <section class="dashboard-block" id="main-menu">
+                <h2>MENU</h2>
+                <div class="user-dashboard" id="dashboard">
                 </div>
-                <div class="row header-menu">
-                    
+            </section>
+            <section class="dashboard-block" id="main-myService">
+                <h2>MY SERVICES</h2>
+                <div class="user-dashboard" id="dashboard_ins">
                 </div>
-                <div class="row user-dashboard" id="dashboard_ins">
-                </div>
-                <div class="row user-dashboard" id="dashboard">
-                </div>
-            </div>
+            </section>
+            <section id="main-info">
+                <h2>INFORMATION</h2>
+                <ul class="list" id="information">
+                </ul>
+            </section>
         </div>
-
-    </div>
-</body>
+    </body>
 </html>
