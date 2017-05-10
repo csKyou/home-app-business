@@ -136,9 +136,9 @@ st.dispAccountList = function(json) {
   for (var i in results) {
     var acc = json.d.results[i];
     var type = acc.Type;
-    var typeImg = "https://demo.personium.io/HomeApplication/__/icons/ico_user_00.png";
+    var typeImg = "https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_user_00.png";
     if (type !== "basic") {
-        typeImg = "https://demo.personium.io/HomeApplication/__/icons/ico_user_01.png";
+        typeImg = "https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_user_01.png";
     }
 
     html += '<div class="list-group-item">';

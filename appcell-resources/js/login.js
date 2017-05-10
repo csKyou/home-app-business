@@ -1,5 +1,5 @@
 var lg = {};
-lg.notImage = "https://demo.personium.io/HomeApplication/__/icons/profile_image.png";
+lg.notImage = "https://demo.personium.io/HomeApplicationForBiz/__/icons/profile_image.png";
 
 lg.initTarget = function() {
   var mode = "local";
@@ -75,12 +75,12 @@ lg.targetCellLogin = function(cellUrl) {
 
 lg.cellUrl = function() {
   var u = location.href;
-  //return "https://demo.personium.io/HomeApplication/";
+  //return "https://demo.personium.io/HomeApplicationForBiz/";
   //return "https://demo.personium.io/Friend/";
   if (u.indexOf("file:") == 0) {
      //return "https://demo.personium.io/akio-shimono/";
      //return "https://demo.personium.io/kyouhei-sakamoto/";
-     return "https://demo.personium.io/HomeApplication/";
+     return "https://demo.personium.io/HomeApplicationForBiz/";
   }
   var i = u.indexOf("/", 8); // first slash
   i = u.indexOf("/", i + 1);  // second slash
@@ -169,7 +169,7 @@ lg.reAnimation = function() {
 lg.getCell = function(cellUrl) {
     //return $.ajax({
     //            type: "GET",
-    //            url: "https://demo.personium.io/HomeApplication/__/service/getCell",
+    //            url: "https://demo.personium.io/HomeApplicationForBiz/__/service/getCell",
     //            data: {
     //                'target': cellUrl
     //            },
