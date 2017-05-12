@@ -133,7 +133,7 @@ demo.createProfileHeaderMenu = function() {
     html += '<span id="tProfileDisplayName">' + cm.user.profile.DisplayName + '</span>';
     //html += '</td><td width="30%">&nbsp;</td>';
     html += '</td><td rowspan="2" style="text-align:right;"><a onClick="demo.openSlide();">';
-    html += '<img src="https://demo.personium.io/HomeApplication/__/icons/ico_menu.png">';
+    html += '<img src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_menu.png">';
     //html += '<p class="headerAccountNameText">' + cm.user.userName + '</p>';
     //html += '<p class="headerAccountNameText">aiueokakikukekosasisuseso</p>Бе';
     html += '</a></td></tr>';

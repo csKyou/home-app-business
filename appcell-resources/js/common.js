@@ -9,8 +9,8 @@ cm.user.nowPage = 0;
 cm.user.nowTitle = {};
 cm.user.settingNowPage = 0;
 cm.user.settingNowTitle = {};
-cm.notImage = "https://demo.personium.io/HomeApplication/__/icons/profile_image.png";
-cm.notAppImage = "https://demo.personium.io/HomeApplication/__/icons/no_app_image.png";
+cm.notImage = "https://demo.personium.io/HomeApplicationForBiz/__/icons/profile_image.png";
+cm.notAppImage = "https://demo.personium.io/HomeApplicationForBiz/__/icons/no_app_image.png";
 
 //Default timeout limit - 60 minutes.
 cm.IDLE_TIMEOUT =  3600000;
@@ -30,22 +30,18 @@ cm.createProfileHeaderMenu = function() {
     }
 
     // create a profile menu in to "profile-menu" class
-    var html = '<div class="header-rightside">';
-    html += '<table class="list-inline table-fixed">';
-    html += '<tr><td rowspan="2" class="profile-header">';
+    var html = '<div>';
+    html += '<a class="allToggle" href="#" data-toggle="modal" data-target="#modal-edit-profile">';
     html += '<img class="icon-profile" id="imProfilePicture" src="' + cm.imgBinaryFile + '" alt="user">';
-    html += '</td><td width="70%" class="sizeBody1">';
-    html += '<span id="tProfileDisplayName">' + cm.user.profile.DisplayName + '</span>';
-    //html += '</td><td width="30%">&nbsp;</td>';
-    html += '</td><td rowspan="2" style="text-align:right;"><a href="#" onClick="cm.openSlide();">';
-    html += '<img src="https://demo.personium.io/HomeApplication/__/icons/ico_menu.png">';
-    //html += '<p class="headerAccountNameText">' + cm.user.userName + '</p>';
-    //html += '<p class="headerAccountNameText">aiueokakikukekosasisuseso</p>▼';
-    html += '</a></td></tr>';
-    html += '<tr><td class="sizeCaption">';
-    //html += '<p class="ellipsisText">' + cm.user.cellUrl + '</p>';
-    html += '<p>' + mg.getMsg("00028") + ': ' + cm.user.userName + '</p>';
-    html += '</td></tr>';
+    html += '</a>';
+    html += '</div>';
+    html += '<div class="header-body">';
+    html += '<div id="tProfileDisplayName" class="sizeBody">' + cm.user.profile.DisplayName + '</div>';
+    html += '<div class="sizeCaption">' + mg.getMsg("00028") + ': ' + cm.user.userName +  '</div>';
+    html += '</div>';
+    html += '<a href="#" onClick="cm.openSlide();">';
+    html += '<img src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_menu.png">';
+    html += '</a>';
     $(".profile-menu").html(html);
 
     // Processing when resized
@@ -215,14 +211,6 @@ cm.moveBackahead = function(flg) {
         cm.user.settingNowPage = no - 1;
         if (cm.user.settingNowPage >= 1) {
             cm.setTitleMenu(cm.user.settingNowTitle[cm.user.settingNowPage], true);
-            if (cm.user.settingNowPage > 1) {
-                $("#settingBackTitle").html(cm.user.settingNowTitle[cm.user.settingNowPage - 1]);
-            } else {
-                $("#settingBackTitle").html("メニュー");
-            }
-        } else {
-            $("#settingBackTitle").html("");
-            $("#imSettingBack").css("display", "none");
         }
     } else {
         var no = cm.user.nowPage;
@@ -242,13 +230,6 @@ cm.moveBackahead = function(flg) {
         cm.user.nowPage = no - 1;
         if (cm.user.nowPage >= 0) {
             cm.setTitleMenu(cm.user.nowTitle[cm.user.nowPage]);
-            if (cm.user.nowPage > 0) {
-                $("#backTitle").html(cm.user.nowTitle[cm.user.nowPage - 1]);
-            } else {
-                $("#backTitle").html("");
-            }
-        } else {
-            $("#backTitle").html("");
         }
     }
 }
@@ -272,16 +253,16 @@ cm.createSideMenu = function() {
     html += '<table class="menu-title">';
     //html += '<tr class="sidemenu-list v-align-m">';
     html += '<tr>';
-    //html += '<td rowspan="3" class="sidemenu-itemEmpty">&nbsp;</td><td valign="middle" class="sidemenu-item sizeBody1"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-edit-profile">' + itemName.EditProf + '<img class="moveIcon" src="https://demo.personium.io/HomeApplication/__/icons/ico_back.png" alt="user"></a></td>';
+    //html += '<td rowspan="3" class="sidemenu-itemEmpty">&nbsp;</td><td valign="middle" class="sidemenu-item sizeBody1"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-edit-profile">' + itemName.EditProf + '<img class="moveIcon" src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_back.png" alt="user"></a></td>';
     html += '<td rowspan="2" class="sidemenu-itemEmpty">&nbsp;</td>';
     html += '<td valign="middle" class="sidemenu-item sizeBody1"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-edit-profile">' + itemName.EditProf + '</a></td>';
     //html += '</tr><tr class="sidemenu-list v-align-m">';
     html += '</tr><tr>';
-    //html += '<td class="sidemenu-item sizeBody1"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-change-password">' + itemName.ChgPass + '<img class="moveIcon" src="https://demo.personium.io/HomeApplication/__/icons/ico_back.png" alt="user"></a></td>';
+    //html += '<td class="sidemenu-item sizeBody1"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-change-password">' + itemName.ChgPass + '<img class="moveIcon" src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_back.png" alt="user"></a></td>';
     html += '<td class="sidemenu-lastitem sizeBody1"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-change-password">' + itemName.ChgPass + '</a></td>';
     //html += '</tr><tr class="sidemenu-list v-align-m">';
     html += '</tr><tr>';
-    //html += '<td class="sidemenu-lastitem sizeBody1"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-logout">' + itemName.Logout + '<img class="moveIcon" src="https://demo.personium.io/HomeApplication/__/icons/ico_back.png" alt="user"></a></td>';
+    //html += '<td class="sidemenu-lastitem sizeBody1"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-logout">' + itemName.Logout + '<img class="moveIcon" src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_back.png" alt="user"></a></td>';
     html += '</tr></table>';
 
     // setting menu
@@ -455,10 +436,10 @@ cm.openSlide = function() {
 // true: Settings false: Default
 cm.createBackMenu = function(moveUrl, flg) {
     if (flg) {
-        var html = '<a href="#" class="allToggle prev-icon" style="float:left;" onClick="cm.moveBackahead(true);return false;"><img id="imSettingBack" src="https://demo.personium.io/HomeApplication/__/icons/ico_back.png" alt="user"></a>';
+        var html = '<a href="#" class="allToggle prev-icon" style="float:left;" onClick="cm.moveBackahead(true);return false;"><img id="imSettingBack" src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_back.png" alt="user"></a>';
         $("#settingBackMenu").html(html);
     } else {
-        var html = '<a href="#" class="allToggle" style="float:left;" onClick="cm.moveBackahead();return false;"><img id="imBack" src="https://demo.personium.io/HomeApplication/__/icons/ico_back.png" alt="user"></a>';
+        var html = '<a href="#" class="allToggle" style="float:left;" onClick="cm.moveBackahead();return false;"><img id="imBack" src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_back.png" alt="user"></a>';
         $("#backMenu").html(html);
     }
     cm.user.prevUrl = moveUrl;
@@ -470,25 +451,11 @@ cm.setTitleMenu = function(title, flg) {
         var titles = cm.user.settingNowTitle;
         titles[cm.user.settingNowPage] = title;
         cm.user.settingNowTitle = titles;
-        if (cm.user.settingNowPage > 1) {
-            //var html = '<p class="ellipsisText">' + cm.user.settingNowTitle[cm.user.settingNowPage - 1] + '</p>';
-            var html = '<span style="white-space: nowrap;">' + cm.user.settingNowTitle[cm.user.settingNowPage - 1] + '</span>';
-            $("#settingBackTitle").html(html);
-            $("#imSettingBack").css("display", "");
-        } else {
-            var html = '<span style="white-space: nowrap;">' + mg.getMsg("00026") + '</span>';
-            $("#settingBackTitle").html(html);
-            $("#imSettingBack").css("display", "");
-        }
     } else {
         $("#titleMenu").html('<p  class="ellipsisText">' + title + '</p>');
         var titles = cm.user.nowTitle;
         titles[cm.user.nowPage] = title;
         cm.user.nowTitle = titles;
-        if (cm.user.nowPage > 0) {
-            var html = '<p class="ellipsisText">' + cm.user.nowTitle[cm.user.nowPage - 1] + '</p>'
-            $("#backTitle").html(html);
-        }
     }
 }
 
@@ -1108,12 +1075,12 @@ function testAPI(evt) {
 function testAPI2() {
     $.ajax({
             //type: "GET",
-            //url: 'https://demo.personium.io/HomeApplication/io_personium_demo_app-myboard',
+            //url: 'https://demo.personium.io/HomeApplicationForBiz/io_personium_demo_app-myboard',
             //headers: {
             //    'Authorization':'Bearer ' + cm.user.access_token
             //}
             type: "PROPFIND",
-            url: 'https://demo.personium.io/HomeApplication/io_personium_demo_app-myboard/MyBoardBox/my-board.json',
+            url: 'https://demo.personium.io/HomeApplicationForBiz/io_personium_demo_app-myboard/MyBoardBox/my-board.json',
             headers: {
                 'Authorization':'Bearer ' + cm.user.access_token,
                 'Depth': 1
