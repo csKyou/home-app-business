@@ -135,7 +135,7 @@ demo.createProfileHeaderMenu = function() {
     html += '</td><td rowspan="2" style="text-align:right;"><a onClick="demo.openSlide();">';
     html += '<img src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_menu.png">';
     //html += '<p class="headerAccountNameText">' + cm.user.userName + '</p>';
-    //html += '<p class="headerAccountNameText">aiueokakikukekosasisuseso</p>Å•';
+    //html += '<p class="headerAccountNameText">aiueokakikukekosasisuseso</p>‚ñº';
     html += '</a></td></tr>';
     html += '<tr><td class="sizeCaption">';
     //html += '<p class="ellipsisText">' + cm.user.cellUrl + '</p>';
@@ -149,7 +149,7 @@ demo.createProfileHeaderMenu = function() {
             var $target = $(this);
 
             // get a account name
-            var html = cm.user.userName + 'Å•';
+            var html = cm.user.userName + '‚ñº';
 
             // Duplicate the current state
             var $clone = $target.clone();
@@ -168,7 +168,7 @@ demo.createProfileHeaderMenu = function() {
             // Replace sentences that exceed the display area
             while((html.length > 0) && ($clone.width() > $target.width())) {
                 html = html.substr(0, html.length - 1);
-                $clone.html(html + '...Å•');
+                $clone.html(html + '...‚ñº');
             }
 
             $target.html($clone.html());
@@ -193,7 +193,7 @@ demo.initSettings = function() {
     // Create Setting Area
     cm.createSettingArea();
     // Create Title Header
-    cm.createTitleHeader(true);
+    cm.createTitleHeader(true, false);
     // Create Back Button
     cm.createBackMenu("main.html", true);
     // Set Title
