@@ -50,20 +50,20 @@ sg.getExternalCellInfo = function(uri) {
   var arrUri = uri.split("/");
   if (arrUri.length < 6) {
       var arrExtCellInfo = new Array();
-	    arrExtCellInfo.push(arrUri[2]);
-	    var externalCellName = arrUri[3];
-	    if (externalCellName != undefined && externalCellName.length == 0) {
-	        externalCellName = undefined;
-	    }
+      arrExtCellInfo.push(arrUri[2]);
+      var externalCellName = arrUri[3];
+      if (externalCellName != undefined && externalCellName.length == 0) {
+          externalCellName = undefined;
+      }
       arrExtCellInfo.push(externalCellName);
-	    return arrExtCellInfo;
-	}
-	return false;
+      return arrExtCellInfo;
+  }
+  return false;
 };
 sg.checkExtCellLinkRole = function() {
     var value = $("#ddlAddExtCellLinkRoleList option:selected").val();
     if (value === undefined) {
-        $("#popupAddExtCellLinkErrorMsg").html(mg.getMsg("E0014"));
+        $("#popupAddExtCellLinkErrorMsg").attr("data-i18n", "selectRole").localize();
         return false;
     } else {
         $("#popupAddExtCellLinkErrorMsg").html("");
@@ -73,7 +73,7 @@ sg.checkExtCellLinkRole = function() {
 sg.checkExtCellLinkRelation = function() {
     var value = $("#ddlAddExtCellLinkRelationList option:selected").val();
     if (value === undefined) {
-        $("#popupAddExtCellLinkErrorMsg").html(mg.getMsg("E0015"));
+        $("#popupAddExtCellLinkErrorMsg").attr("data-i18n", "selectRelation").localize();
         return false;
     } else {
         $("#popupAddExtCellLinkErrorMsg").html("");
@@ -103,7 +103,7 @@ sg.dispExtCellList = function(json) {
       objSel.removeChild(objSel.firstChild);
     }
   }
-  $("#ddlExtCellLinkRelationList").append('<option value="">' + mg.getMsg("I0024") + '</option>');
+  $("#ddlExtCellLinkRelationList").append('<option value="" data-i18n="selectExternalCell"></option>');
 
   var results = json.d.results;
   results.sort(function(val1, val2) {
@@ -147,12 +147,13 @@ sg.checkUrlCell = function(url) {
       sg.restCreateExtCellAPI(jsonData);
     }
   }).fail(function(data) {
-    alert("The specified cell does not exist.");
+    //alert("The specified cell does not exist.");
+    $("#popupAddExtCellUrlErrorMsg").attr("data-i18n", "notExistTargetCell").localize();
   });
 }
 sg.dispDelExtCellModal = function() {
-    $("#dvTextConfirmation").html(mg.getMsg("I0010", sg.linkExtCellUrl));
-    $("#modal-confirmation-title").html(mg.getMsg("00018"));
+    $("#dvTextConfirmation").html(i18next.t("confirmDeleteExternalCell", {value:sg.linkExtCellUrl}));
+    $("#modal-confirmation-title").html(i18next.t("DeleteExternalCell"));
     $('#b-del-extcell-ok').css("display","");
     $('#b-cancel').css("display","");
     $('#modal-confirmation').modal('show');
@@ -161,15 +162,13 @@ sg.urlBlurEvent = function() {
         var schemaURL = $("#addExtCellUrl").val();
         var extCellInfo = sg.getExternalCellInfo(schemaURL);
         if (extCellInfo == false) {
-            $("#popupAddExtCellUrlErrorMsg").html(mg.getMsg("E0011"));
+            $("#popupAddExtCellUrlErrorMsg").attr("data-i18n", "invalidURL").localize();
             return false;
         }
         var extCellName = extCellInfo[1];
         var extCellURL = extCellInfo[0];
         if (sg.validateSchemaURL(schemaURL, "popupAddExtCellUrlErrorMsg", "#addExtCellUrl")
-          && sg.validateURL(extCellURL, "popupAddExtCellUrlErrorMsg", "#addExtCellUrl")
-          && sg.validateExternalCellName(extCellName)
-          && sg.doesUrlContainSlash(schemaURL, "popupAddExtCellUrlErrorMsg", "#addExtCellUrl", mg.getMsg("I0011"))) {
+          && sg.doesUrlContainSlash(schemaURL, "popupAddExtCellUrlErrorMsg", "#addExtCellUrl", i18next.t("errorValidateEndWithExternalCell"))) {
 
           return true;
         }
@@ -185,8 +184,8 @@ sg.dispDelExtCellRoleModal = function(url, roleName, boxName, no) {
       cm.linkBoxName = boxName
     }
     sg.linkExtCellNo = no;
-    $("#dvTextConfirmation").html(mg.getMsg("I0007", roleName, boxName));
-    $("#modal-confirmation-title").html(mg.getMsg("00006"));
+    $("#dvTextConfirmation").html(i18next.t("removeAssociationRole", {value1:roleName, value2:boxName}));
+    $("#modal-confirmation-title").html(i18next.t("DeleteAssigningRole"));
     $('#b-cancel').css("display","");
     $('#b-del-extcelllinkrole-ok').css("display","");
     $('#modal-confirmation').modal('show');
@@ -276,7 +275,7 @@ sg.appendRelationLinkExtCell = function(url, dispName, description, imageSrc, ex
         if (splitID.length > 2) {
             boxName = splitID[2];
         }
-        html += '<td style="width: 10%;"><a class="del-button list-group-item" style="top:25%" href="#" onClick="sg.dispDelExtCellRelationModal(\'' + url + '\',\'' + relName + '\',\'' + boxName + '\');return(false)">' + mg.getMsg("00004") + '</a></td>';
+        html += '<td style="width: 10%;"><a class="del-button list-group-item" style="top:25%" href="#" onClick="sg.dispDelExtCellRelationModal(\'' + url + '\',\'' + relName + '\',\'' + boxName + '\');return(false)" data-i18n="Del"></a></td>';
     } else {
         html += '<td style="width: 10%;"></td>';
     }
@@ -296,11 +295,11 @@ sg.createExtCellProfile = function(url, dispName, description, imagesrc) {
     cm.setBackahead();
     var html = '<div class="panel-body">';
     html += '<div class="extcell-profile" id="dvExtProfileImage"><img class="image-circle-large" style="margin: auto;" id="imgExtProfileImage" src="' + imagesrc + '" alt="image" /><span id="txtExtUrl">' + url + '</span><h5><span id="txtDescription">' + description + '</span></h5></div>';
-    html += '<div class="toggleButton"><a class="toggle list-group-item" href="#" onClick="sg.showExtPublicBoxList();return(false);">' + mg.getMsg("00037") + '</a></div>';
-    html += '<div class="toggleButton"><a class="toggle list-group-item" href="#" onClick="sg.createRoleList(\'' + url + '\');return(false);">' + mg.getMsg("00038") + '</a></div>';
-    html += '<div class="toggleButton"><a class="toggle list-group-item" href="#" onClick="sg.dispDelExtCellModal();return(false);">' + mg.getMsg("00018") + '</a></div>';
+    html += '<div class="toggleButton"><a class="toggle list-group-item" href="#" onClick="sg.showExtPublicBoxList();return(false);" data-i18n="WatchPublicBOX"></a></div>';
+    html += '<div class="toggleButton"><a class="toggle list-group-item" href="#" onClick="sg.createRoleList(\'' + url + '\');return(false);" data-i18n="RoleList"></a></div>';
+    html += '<div class="toggleButton"><a class="toggle list-group-item" href="#" onClick="sg.dispDelExtCellModal();return(false);" data-i18n="DeleteExternalCell"></a></div>';
     html += '</div>';
-    $("#toggle-panel1").append(html);
+    $("#toggle-panel1").append(html).localize();
     $("#toggle-panel1,.panel-default").toggleClass('slide-on');
     cm.setTitleMenu(dispName);
 };
@@ -317,7 +316,7 @@ sg.createRoleList = function(url) {
         sg.dispExtCellRoleList(data, sg.linkExtCellUrl);
         $("#toggle-panel2").toggleClass('slide-on');
         $("#toggle-panel1").toggleClass('slide-on-holder');
-        cm.setTitleMenu(mg.getMsg("00038"));
+        cm.setTitleMenu("RoleList");
     });
 };
 sg.getExtCellRoleList = function(url) {
@@ -356,17 +355,17 @@ sg.dispExtCellRoleList = function(json, exturl) {
     html += '<div class="list-group-item">';
     html += '<table class="table-fixed"><tr>';
     html += '<td style="width: 85%;"><p class="ellipsisText">' + name + '(' + boxName + ')</p></td>';
-    html += '<td colspan="2" style="width: 15%;"><a class="del-button list-group-item" href="#" onClick="sg.dispDelExtCellRoleModal(\'' + exturl + '\',\'' + name + '\',\'' + boxName + '\');return(false)">' + mg.getMsg("00004") + '</a></td>';
+    html += '<td colspan="2" style="width: 15%;"><a class="del-button list-group-item" href="#" onClick="sg.dispDelExtCellRoleModal(\'' + exturl + '\',\'' + name + '\',\'' + boxName + '\');return(false)" data-i18n="Del"></a></td>';
     //html += '</tr><tr>';
     //html += '<td>' + boxName + '</td>';
     html += '</tr></table></div>';
     //$("#dvExtCellLinkRole").append(html);
   }
   html += '<div class="list-group-item">';
-  html += '<a class="allToggle" href="#" onClick="cm.dispAssignRole(\'ext\')">＋ ' + mg.getMsg("00025") + '</a></div>';
-  //html = '<a class="list-group-item" href="#" data-toggle="modal" data-target="#modal-add-extcelllinkrole">＋ ' + mg.getMsg("00025") + '</a>';
+  html += '<a class="allToggle" href="#" onClick="cm.dispAssignRole(\'ext\')" data-i18n="AddRolePlus"></a></div>';
+  //html = '<a class="list-group-item" href="#" data-toggle="modal" data-target="#modal-add-extcelllinkrole">＋ ' + i18next.t("AddRole") + '</a>';
   html += '</div>';
-  $("#toggle-panel2").append(html);
+  $("#toggle-panel2").append(html).localize();
 };
 sg.showExtPublicBoxList = function() {
     cm.getTargetToken(sg.linkExtCellUrl).done(function(data) {
@@ -384,8 +383,8 @@ sg.showExtPublicBoxList = function() {
         }).done(function(data) {
                   sg.checkBoxPublic(data);
         }).fail(function(data) {
-                  $('#dvTextConfirmation').html(mg.getMsg("I0019"));
-                  $('#modal-confirmation-title').html(mg.getMsg("00037"));
+                  $('#dvTextConfirmation').html(i18next.t("notPermissionView"));
+                  $('#modal-confirmation-title').html(i18next.t("WatchPublicBOX"));
                   $('#b-cancel').css("display","");
                   $('#modal-confirmation').modal('show');
         });
@@ -401,7 +400,7 @@ sg.checkBoxPublic = function(json) {
       return (val1.Name < val2.Name ? 1 : -1);
     })
     var html = '<div class="panel-body">';
-    html += '<p>' + mg.getMsg("00027") + '</p><HR>';
+    html += '<p data-i18n="Document"></p><HR>';
     for (var i in results) {
         var boxName = json.d.results[i].Name;
         html += '<p style="margin-top: 10px;">' + boxName + '</p>';
@@ -410,7 +409,7 @@ sg.checkBoxPublic = function(json) {
     $("#toggle-panel2").append(html);
     $("#toggle-panel2").toggleClass('slide-on');
     $("#toggle-panel1").toggleClass('slide-on-holder');
-    cm.setTitleMenu(mg.getMsg("00037"));
+    cm.setTitleMenu("WatchPublicBOX");
     //$('#modal-public-extbox').modal('show');
 };
 sg.dispDelExtCellRelationModal = function(url, relationName, boxName, no) {
@@ -422,8 +421,8 @@ sg.dispDelExtCellRelationModal = function(url, relationName, boxName, no) {
       cm.linkBoxName = boxName
     }
     sg.linkExtCellNo = no;
-    $("#dvTextConfirmation").html(mg.getMsg("I0012", relationName, boxName));
-    $("#modal-confirmation-title").html(mg.getMsg("00019"));
+    $("#dvTextConfirmation").html(i18next.t("confirmDeleteRelationAssign", {value1:relationName, value2:boxName}));
+    $("#modal-confirmation-title").html(i18next.t("DeleteAssigningRelation"));
     $('#b-cancel').css("display","");
     $('#b-del-extcelllinkrelation-ok').css("display","");
     $('#modal-confirmation').modal('show');
@@ -472,20 +471,20 @@ sg.dispRelationList = function(json) {
     html += '</a></td>';
     html += '</tr></table></div>';
     html += '<nav id="extCellRelMenu' + i + '"><ul class="extCellRelMenu"><div name="dvExtCellRelList" id="' + extRelID + '"></div><div class="list-group-item">';
-    html += '<a class="allToggle" href="#" onClick="sg.setLinkParamName(\'' + objRelation.Name + '\',\'' + boxName + '\')" data-toggle="modal" data-target="#modal-add-extcelllinkrelation">＋ ' + mg.getMsg("00022") + '</a></div></ul></nav>';
-    $("#dvExtCellList").append(html);
+    html += '<a class="allToggle" href="#" onClick="sg.setLinkParamName(\'' + objRelation.Name + '\',\'' + boxName + '\')" data-toggle="modal" data-target="#modal-add-extcelllinkrelation" data-i18n="AddExternalCellPlus"></a></div></ul></nav>';
+    $("#dvExtCellList").append(html).localize();
     sg.getRelLinkExtCell(objRelation.Name, relBoxName);
   }
 
   // Independent
   html = '<div class="list-group-item relation-menu">';
-  html += '<a class="accountToggle" id="relationLinkToRoleToggle" onClick="sg.slideToggle(\'extCellRelMenu\')">' + mg.getMsg("00023") + '</a>';
+  html += '<a class="accountToggle" id="relationLinkToRoleToggle" onClick="sg.slideToggle(\'extCellRelMenu\')" data-i18n="Independent"></a>';
   html += '</div>';
   html += '<nav id="extCellRelMenu"><ul class="extCellRelMenu"><div name="dvExtCellRelList" id="dvExtCellRelList"></div>';
-  //html += '<div><a class="list-group-item" href="#" data-toggle="modal" data-target="#modal-add-extcell">＋ ' + mg.getMsg("00024") + '</a></div>';
-  html += '<div class="list-group-item"><a class="allToggle" href="#" onClick="sg.createAddExtCell()">＋ ' + mg.getMsg("00024") + '</a></div>';
+  //html += '<div><a class="list-group-item" href="#" data-toggle="modal" data-target="#modal-add-extcell">＋' + i18next.t("CreateExternalCell") + '</a></div>';
+  html += '<div class="list-group-item"><a class="allToggle" href="#" onClick="sg.createAddExtCell()" data-i18n="CreateExternalCellPlus"></a></div>';
   html += '</ul></nav>';
-  $("#dvExtCellList").append(html);
+  $("#dvExtCellList").append(html).localize();
   sg.getExtCellList();
 
   $(".relationRoleMenu").css("display", "none");
@@ -497,22 +496,22 @@ sg.createAddExtCell = function() {
         var html = '<div class="modal-body">';
         html += '<div id="dvSelectedCell">URL</div>';
         html += '<div id="dvTextSelectedCell" style="margin-bottom: 10px;"><input type="text" id="addExtCellUrl" onblur="sg.blurAddExtCellUrl();"><span class="popupAlertArea" style="color:red"><aside id="popupAddExtCellUrlErrorMsg"> </aside></span></div>';
-        html += '<div id="dvCheckAddExtCellLinkRoleAndRelation" style="margin-bottom: 10px;"><label><input type="checkbox" id="addCheckExtCellLinkRoleAndRelation" onChange="sg.changeCheckExtCellLinkRoleAndRelation(this);">' + mg.getMsg("I0018") + '</label></div>';
+        html += '<div id="dvCheckAddExtCellLinkRoleAndRelation" style="margin-bottom: 10px;"><label><input type="checkbox" id="addCheckExtCellLinkRoleAndRelation" onChange="sg.changeCheckExtCellLinkRoleAndRelation(this);"><span data-i18n="AssignMulti"></span></label></div>';
         html += '<div id="dvSelectAddExtCellLink" style="margin-bottom: 10px;"><table>';
-        html += '<tr><td><label><input type="radio" name="addRadioExtCellLink" id="addRadioExtCellLinkRole" onChange="sg.changeRadioExtCellLink();" value="role" disabled>' + mg.getMsg("00032") + '</label></td><td><label><input type="radio" name="addRadioExtCellLink" id="addRadioExtCellLinkRelation" onChange="sg.changeRadioExtCellLink();" value="relation" disabled>' + mg.getMsg("00033") + '</label></td></tr>';
+        html += '<tr><td><label><input type="radio" name="addRadioExtCellLink" id="addRadioExtCellLinkRole" onChange="sg.changeRadioExtCellLink();" value="role" disabled><span data-i18n="Role"></span></label></td><td><label><input type="radio" name="addRadioExtCellLink" id="addRadioExtCellLinkRelation" onChange="sg.changeRadioExtCellLink();" value="relation" disabled><span data-i18n="Relation"></span></label></td></tr>';
         html += '<tr><td colspan="2"><select class="form-control" name="" id="ddlAddExtCellLinkRoleList" multiple disabled><option>Select a role</option></select><select class="form-control" name="" id="ddlAddExtCellLinkRelationList" multiple disabled style="display:none;"><option>Select a relation</option></select></td></tr>';
         html += '<tr><td colspan="2"><span class="popupAlertArea" style="color:red"><aside id="popupAddExtCellLinkErrorMsg"> </aside></span></td></tr>';
         html += '</table></div>';
         html += '<div class="modal-footer">';
-        html += '<button type="button" class="btn btn-default" onClick="cm.moveBackahead();">' + mg.getMsg("00045") + '</button>';
-        html += '<button type="button" class="btn btn-primary" id="b-add-extcell-ok" onClick="sg.addExtCell();">Add</button>';
+        html += '<button type="button" class="btn btn-default" onClick="cm.moveBackahead();" data-i18n="Cancel"></button>';
+        html += '<button type="button" class="btn btn-primary" id="b-add-extcell-ok" onClick="sg.addExtCell();" data-i18n="Add"></button>';
         html += '</div></div>';
-        $("#toggle-panel1").append(html);
+        $("#toggle-panel1").append(html).localize();
         cm.dispRoleList(data, "ddlAddExtCellLinkRoleList", true);
         cm.getRelationList().done(function(data) {
             cm.dispRelationList(data, "ddlAddExtCellLinkRelationList", true);
             $("#toggle-panel1,.panel-default").toggleClass('slide-on');
-            cm.setTitleMenu(mg.getMsg("00024"));
+            cm.setTitleMenu("CreateExternalCell");
         });
     });
 };
@@ -550,47 +549,11 @@ sg.changeRadioExtCellLink = function() {
 };
 
 // Validation Check
-sg.validateName = function (displayName, displayNameSpan,txtID) {
-        var MINLENGTH = 1;
-        var MAXLENGTH = 128;
-        var letters = /[0-9a-zA-Z-_!\$\*=\^`\{\|\}~\.@]+$/;
-        var specialchar = /^[-_!\$\*=\^`\{\|\}~\.@]*$/;
-        var allowedLetters = /[0-9a-zA-Z-_!\$\*=\^`\{\|\}~\.@]+$/;
-        var lenDisplayName = displayName.length;
-        //this.removeStatusIcons(txtID);
-        document.getElementById(displayNameSpan).innerHTML = "";
-        if(lenDisplayName < MINLENGTH || displayName == undefined || displayName == null || displayName == "") {
-                document.getElementById(displayNameSpan).innerHTML =  mg.getMsg("E0003");
-                //this.showErrorIcon(txtID);
-                //uCellProfile.spinner.stop();
-                return false;
-        } else if (lenDisplayName >= MAXLENGTH) {
-                document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0004");
-                //uCellProfile.spinner.stop();
-                //this.showErrorIcon(txtID);
-                return false;
-        } else if (lenDisplayName != 0 && ! (displayName.match(letters))){
-                document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0005");
-                //this.showErrorIcon(txtID);
-                return false;
-        //} else if (lenDisplayName != 0 && !(displayName.match(allowedLetters))) {
-        //        document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
-        //        //this.showErrorIcon(txtID);
-        //        return false;
-        } else if(lenDisplayName != 0 && (specialchar.toString().indexOf(displayName.substring(0,1)) >= 0)){
-                document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
-                //this.showErrorIcon(txtID);
-                //uCellProfile.spinner.stop();
-                return false;
-        }
-        //this.showValidValueIcon(txtID);
-        return true;
-};
 sg.validateSchemaURL = function(schemaURL, schemaSpan, txtID) {
   var isHttp = schemaURL.substring(0, 5);
   var isHttps = schemaURL.substring(0, 6);
   var minURLLength = schemaURL.length;
-  var validMessage = mg.getMsg("E0007");
+  var validMessage = "pleaseValidSchemaURL";
   var letters = /^[0-9a-zA-Z-_.\/]+$/;
   var startHyphenUnderscore = /^[-_!@#$%^&*()=+]/;
   var urlLength = schemaURL.length;
@@ -605,87 +568,27 @@ sg.validateSchemaURL = function(schemaURL, schemaSpan, txtID) {
   if (schemaURL == "" || schemaURL == null || schemaURL == undefined) {
     //removeStatusIcons(txtID);
     return true;
-	} else if ((isHttp != "http:" && isHttps != "https:")
+  } else if ((isHttp != "http:" && isHttps != "https:")
             || (minURLLength <= 8)) {
-    document.getElementById(schemaSpan).innerHTML = validMessage;
+    $("#" + schemaSpan).attr("data-i18n", validMessage).localize();
     //showErrorIcon(txtID);
     return false;
   } else if (urlLength > 1024) {
-    document.getElementById(schemaSpan).innerHTML = mg.getMsg("E0008");
-    //showErrorIcon(txtID);
-    return false;
-  } else if (domainName.match(startHyphenUnderscore)) {
-    document.getElementById(schemaSpan).innerHTML = mg.getMsg("E0009");
-    //showErrorIcon(txtID);
-    return false;
-  } else if (!(domainName.match(letters))) {
-    document.getElementById(schemaSpan).innerHTML = mg.getMsg("E0005");
+    $("#" + schemaSpan).attr("data-i18n", "maxUrlLengthError").localize();
     //showErrorIcon(txtID);
     return false;
   } else if (isDot == -1) {
-    document.getElementById(schemaSpan).innerHTML = validMessage;
+    $("#" + schemaSpan).attr("data-i18n", validMessage).localize();
     //showErrorIcon(txtID);
     return false;
   } else if ((domainName.indexOf(".."))>-1 || (domainName.indexOf("//"))>-1) {
-    document.getElementById(schemaSpan).innerHTML = validMessage;
+    $("#" + schemaSpan).attr("data-i18n", validMessage).localize();
     //showErrorIcon(txtID);
     return false;
   }
   //showValidValueIcon(txtID);
   document.getElementById(schemaSpan).innerHTML = "";
   return true;
-};
-sg.validateURL = function(domainName,errorSpan,txtID) {
-	var letters = /^[0-9a-zA-Z-_.]+$/;
-	var startHyphenUnderscore = /^[-_!@#$%^&*()=+]/;
-	if (domainName == undefined){
-		document.getElementById(errorSpan).innerHTML = mg.getMsg("E0011");
-		//cellpopup.showErrorIcon(txtID);
-		return false;
-	}
-	var lenCellName = domainName.length;
-	if (domainName.match(startHyphenUnderscore)) {
-		document.getElementById(errorSpan).innerHTML = mg.getMsg("E0009");
-		//cellpopup.showErrorIcon(txtID);
-		return false;
-	} else if (lenCellName != 0 && !(domainName.match(letters))) {
-		document.getElementById(errorSpan).innerHTML = mg.getMsg("E0005");
-		//cellpopup.showErrorIcon(txtID);
-		return false;
-	} 
-	document.getElementById(errorSpan).innerHTML = "";
-	//cellpopup.showValidValueIcon(txtID);
-	return true;
-};
-sg.validateExternalCellName = function(cellName) {
-	if (cellName == undefined) {
-		//cellpopup.showErrorIcon('#txtUrl');
-		document.getElementById("popupAddExtCellUrlErrorMsg").innerHTML = mg.getMsg("E0017");
-		return false;
-	}
-	var letters = /^[0-9a-zA-Z-_]+$/;
-	var startHyphenUnderscore = /^[-_]/;
-	var lenCellName = cellName.length;
-	if (lenCellName < 1) {
-		document.getElementById("popupAddExtCellUrlErrorMsg").innerHTML = mg.getMsg("E0018");
-		//cellpopup.showErrorIcon('#txtUrl');
-		return false;
-	} else if (lenCellName > 128) {
-		document.getElementById("popupAddExtCellUrlErrorMsg").innerHTML = mg.getMsg("E0019");
-		//cellpopup.showErrorIcon('#txtUrl');
-		return false;
-	} else if (cellName.match(startHyphenUnderscore)) {
-          document.getElementById("popupAddExtCellUrlErrorMsg").innerHTML = mg.getMsg("E0020");
-          //cellpopup.showErrorIcon('#txtUrl');
-          return false;
-	} else if (lenCellName != 0 && !(cellName.match(letters))) {
-		document.getElementById("popupAddExtCellUrlErrorMsg").innerHTML = mg.getMsg("E0005");
-		//cellpopup.showErrorIcon('#txtUrl');
-		return false;
-	}
-	document.getElementById("popupAddExtCellUrlErrorMsg").innerHTML = "";
-	//cellpopup.showValidValueIcon('#txtUrl');
-	return true;
 };
 sg.doesUrlContainSlash = function(schemaURL, schemaSpan,txtID,message) {
 	if (schemaURL != undefined) {
@@ -917,11 +820,11 @@ sg.restDeleteExtCellLinkRelation = function() {
     });
 };
 
-$(document).ready(function() {
+sg.initSocialGraph = function() {
     cm.createSideMenu();
     cm.createTitleHeader(false, true);
     cm.createBackMenu("main.html");
-    cm.setTitleMenu(mg.getMsg("00009"));
+    cm.setTitleMenu("Community");
     st.initSettings();
     $("#dashboard").append('<div class="panel list-group toggle-panel" id="toggle-panel1"></div>');
 
@@ -1015,7 +918,7 @@ $(document).ready(function() {
       $(this).toggleClass("active");
       $(".extcellMenu").slideToggle();
     });
-});
+};
 
 // API DEBUG
 //sg.testAPI = function() {

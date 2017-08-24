@@ -7,6 +7,30 @@ demo.showModal = function(id) {
   }
 };
 
+demo.initAppMarket = function() {
+  demoSession = JSON.parse(sessionStorage.getItem("demoSession"));
+  demo.showModal("#modal-applicationlist-start");
+
+  cm.createTitleHeader(false, true);
+  cm.createSideMenu();
+  cm.createBackMenu("main.html");
+  cm.setTitleMenu("AppMarket");
+  demo.initSettings();
+  $("#dashboard").append('<div class="panel list-group toggle-panel" id="toggle-panel1"></div>');
+
+  demo.createApplicationList();
+  // menu-toggle
+  $(".appInsMenu").css("display", "none");
+  $("#appInsToggle.toggle").on("click", function() {
+    $(this).toggleClass("active");
+    $(".appInsMenu").slideToggle();
+  });
+
+  $('#b-applicationlist-start-ok').on('click', function () {
+     $('#modal-applicationlist-start').modal('hide');
+  });
+};
+
 demo.initTarget = function() {
   $('#errorCellUrl').html("");
   lg.targetCellLogin("");
@@ -14,6 +38,8 @@ demo.initTarget = function() {
   demoSession = JSON.parse(sessionStorage.getItem("demoSession"));
   if (!demoSession || !demoSession.demoend) {
      $('#modal-demo-start').modal('show');
+     demoSession = {};
+     sessionStorage.setItem("demoSession", JSON.stringify(demoSession));
   } else {
      $('#modal-demoend-start').modal('show');
   }
@@ -61,14 +87,10 @@ demo.initTarget = function() {
 demo.initMain = function() {
   demoSession = JSON.parse(sessionStorage.getItem("demoSession"));
 
-  if (!demoSession.social && !demoSession.sideMenu) {
+  if (!demoSession.insApp) {
       demo.showModal('#modal-logined-start');
-  } else if (demoSession.social && !demoSession.sideMenu) {
-      demo.showModal('#modal-socialed-start');
-  } else if (!demoSession.social && demoSession.sideMenu) {
-      //$('#modal-menued-start').modal('show');
   } else {
-      demo.showModal('#modal-logout-start');
+      demo.showModal('#modal-installed-start');
   }
 
   $('#b-logined-start-ok').on('click', function () {
@@ -80,8 +102,8 @@ demo.initMain = function() {
   $('#b-menued-start-ok').on('click', function () {
      $('#modal-menued-start').modal('hide');
   });
-  $('#b-application-start-ok').on('click', function () {
-     $('#modal-application-start').modal('hide');
+  $('#b-sidemenu-end-ok').on('click', function () {
+     $('#modal-sidemenu-end').modal('hide');
   });
   $('#b-applicationlist-start-ok').on('click', function () {
      $('#modal-applicationlist-start').modal('hide');
@@ -91,7 +113,7 @@ demo.initMain = function() {
   });
   $('#b-sidemenu-start-ok').on('click', function () {
      $('#modal-sidemenu-start').modal('hide');
-     demo.showModal('#modal-application-start');
+     demo.showModal('#modal-sidemenu-end');
   });
   $('#b-logout-start-ok').on('click', function () {
      $('#modal-logout-start').modal('hide');
@@ -99,19 +121,14 @@ demo.initMain = function() {
      sessionStorage.setItem("demoSession", JSON.stringify(demoSession));
   });
   $('#dvOverlay').on('click', function() {
-     $(".overlay").removeClass('overlay-on');
-     $(".slide-menu").removeClass('slide-on');
-     demoSession.sideMenu = true;
-     sessionStorage.setItem("demoSession", JSON.stringify(demoSession));
-     if (!demoSession.social && !demoSession.sideMenu) {
-         demo.showModal('#modal-logined-start');
-     } else if (demoSession.social && !demoSession.sideMenu) {
-         demo.showModal('#modal-socialed-start');
-     } else if (!demoSession.social && demoSession.sideMenu) {
-         //$('#modal-menued-start').modal('show');
-     } else {
-         demo.showModal('#modal-logout-start');
-     }
+//     $(".overlay").removeClass('overlay-on');
+//     $(".slide-menu").removeClass('slide-on');
+     demo.toggleSlide();
+     demo.showModal('#modal-appmarket-start');
+     demoSession.moveAppMarket = true;
+  });
+  $('#b-appmarket-start-ok').on('click', function () {
+     $('#modal-appmarket-start').modal('hide');
   });
 };
 
@@ -125,22 +142,18 @@ demo.createProfileHeaderMenu = function() {
     }
 
     // create a profile menu in to "profile-menu" class
-    var html = '<div class="header-rightside">';
-    html += '<table class="list-inline table-fixed">';
-    html += '<tr><td rowspan="2" class="profile-header">';
+    var html = '<div>';
+    html += '<a class="allToggle" href="#" data-toggle="modal" data-target="#modal-edit-profile">';
     html += '<img class="icon-profile" id="imProfilePicture" src="' + cm.imgBinaryFile + '" alt="user">';
-    html += '</td><td width="70%" class="sizeBody1">';
-    html += '<span id="tProfileDisplayName">' + cm.user.profile.DisplayName + '</span>';
-    //html += '</td><td width="30%">&nbsp;</td>';
-    html += '</td><td rowspan="2" style="text-align:right;"><a onClick="demo.openSlide();">';
-    html += '<img src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_menu.png">';
-    //html += '<p class="headerAccountNameText">' + cm.user.userName + '</p>';
-    //html += '<p class="headerAccountNameText">aiueokakikukekosasisuseso</p>▼';
-    html += '</a></td></tr>';
-    html += '<tr><td class="sizeCaption">';
-    //html += '<p class="ellipsisText">' + cm.user.cellUrl + '</p>';
-    html += '<p>Account: ' + cm.user.userName + '</p>';
-    html += '</td></tr>';
+    html += '</a>';
+    html += '</div>';
+    html += '<div class="header-body">';
+    html += '<div id="tProfileDisplayName" class="sizeBody">' + cm.user.profile.DisplayName + '</div>';
+    html += '<div class="sizeCaption">' + i18next.t("Account") + ': ' + cm.user.userName +  '</div>';
+    html += '</div>';
+    html += '<a href="#" onClick="demo.toggleSlide();">';
+    html += '<img src="https://demo.personium.io/HomeApplication/__/icons/ico_menu.png">';
+    html += '</a>';
     $(".profile-menu").html(html);
 
     // Processing when resized
@@ -177,11 +190,26 @@ demo.createProfileHeaderMenu = function() {
     });
 }
 
-demo.openSlide = function() {
-    $(".overlay").toggleClass('overlay-on');
-    $(".slide-menu").toggleClass('slide-on');
-    if (!demoSession.sideMenu) {
-        demo.showModal('#modal-sidemenu-start');
+demo.toggleSlide = function() {
+//    $(".overlay").toggleClass('overlay-on');
+//    $(".slide-menu").toggleClass('slide-on');
+
+    var menu = $('.slide-nav');
+    var overlay = $('.overlay');
+    var menuWidth = menu.outerWidth();
+
+    menu.toggleClass('open');
+    if(menu.hasClass('open')){
+        // show menu
+        menu.animate({'right' : 0 }, 300);
+        overlay.fadeIn();
+        if (!demoSession.sideMenu) {
+            demo.showModal('#modal-sidemenu-start');
+        }
+    } else {
+        // hide menu
+        menu.animate({'right' : -menuWidth }, 300);
+        overlay.fadeOut();
     }
 }
 
@@ -197,7 +225,7 @@ demo.initSettings = function() {
     // Create Back Button
     cm.createBackMenu("main.html", true);
     // Set Title
-    cm.setTitleMenu(mg.getMsg("00001"), true);
+    cm.setTitleMenu("Settings", true);
     cm.setIdleTime();
 
     $('#b-edit-accconfirm-ok').on('click', function () { 
@@ -234,6 +262,7 @@ demo.initSettings = function() {
     });
 
     // menu-toggle
+/*
     $("#accountToggle").on("click", function() {
       st.createAccountList();
     });
@@ -247,38 +276,129 @@ demo.initSettings = function() {
     $("#relationToggle").on("click", function() {
       st.createRelationList();
     });
+*/
 };
 
+demo.createSideMenu = function() {
+    var itemName = {};
+    itemName.EditProf = i18next.t("EditProfile");
+    itemName.ChgPass = i18next.t("ChangePass");
+    itemName.Logout = i18next.t("Logout");
+    itemName.DispName = i18next.t("DisplayName");
+    itemName.Description = i18next.t("Description");
+    itemName.Photo = i18next.t("ProfileImage");
+    itemName.Relogin = i18next.t("Re-Login");
+
+    var html = '<div class="slide-menu">';
+    html += '<nav class="slide-nav">';
+    html += '<ul>';
+
+    // Menu Title
+    html += '<li class="menu-title">' + i18next.t("Menu") + '</li>';
+    // profile edit
+    html += '<li><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-edit-profile">' + itemName.EditProf + '</a></li>';
+    html += '<li class="menu-separator"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-change-password">' + itemName.ChgPass + '</a></li>';
+    // setting menu
+    html += '<li><a class="allToggle" id="accountToggle" href="#">' + i18next.t("Account") + '</a></li>';
+    html += '<li><a class="allToggle" id="applicationToggle" href="#">' + i18next.t("Application") + '</a></li>';
+    html += '<li><a class="allToggle" id="roleToggle" href="#">' + i18next.t("Role") + '</a></li>';
+    html += '<li class="menu-separator"><a class="allToggle" id="relationToggle" href="#">' + i18next.t("Relation") + '</a></li>';
+    // log out
+    html += '<li class="menu-separator"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-logout">' + itemName.Logout + '</a></li>';
+
+    html += '</ul>';
+    html += '</nav>';
+    html += '</div>';
+    html += '<div class="overlay" id="dvOverlay"></div>';
+
+    $(".display-parent-div").append(html);
+
+    // Modal
+    // ReLogin
+    html = '<div id="modal-relogin" class="modal fade" role="dialog" data-backdrop="static">' +
+           '<div class="modal-dialog">' +
+           '<div class="modal-content">' +
+           '<div class="modal-header login-header">' +
+           '<h4 class="modal-title">' + itemName.Relogin + '</h4>' +
+           '</div>' +
+           '<div class="modal-body">' +
+           i18next.t("successChangePass") +
+           '</div>' +
+           '<div class="modal-footer">' +
+           '<button type="button" class="btn btn-primary" id="b-relogin-ok" >OK</button>' +
+           '</div></div></div></div>';
+    modal = $(html);
+    $(document.body).append(modal);
+
+    // Log Out
+    html = '<div id="modal-logout" class="modal fade" role="dialog">' +
+           '<div class="modal-dialog">' +
+           '<div class="modal-content">' +
+           '<div class="modal-header login-header">' +
+           '<button type="button" class="close" data-dismiss="modal">×</button>' +
+           '<h4 class="modal-title">' + itemName.Logout + '</h4>' +
+           '</div>' +
+           '<div class="modal-body">' +
+           i18next.t("logoutConfirm") +
+           '</div>' +
+           '<div class="modal-footer">' +
+           '<button type="button" class="btn btn-default" data-dismiss="modal">' + i18next.t("Cancel") + '</button>' +
+           '<button type="button" class="btn btn-primary" id="b-logout-ok" >OK</button>' +
+           '</div></div></div></div>';
+    modal = $(html);
+    $(document.body).append(modal);
+
+    // Session Expiration
+    html = '<div id="modal-session-expired" class="modal fade" role="dialog" data-backdrop="static">' +
+           '<div class="modal-dialog">' +
+           '<div class="modal-content">' +
+           '<div class="modal-header login-header">' +
+           '<h4 class="modal-title">' + itemName.Relogin + '</h4>' +
+           '</div>' +
+           '<div class="modal-body">' +
+           i18next.t("expiredSession") +
+           '</div>' +
+           '<div class="modal-footer">' +
+           '<button type="button" class="btn btn-primary" id="b-session-relogin-ok" >OK</button>' +
+           '</div></div></div></div>';
+    modal = $(html);
+    $(document.body).append(modal);
+
+    // Set Event
+    $('#b-logout-ok,#b-relogin-ok,#b-session-relogin-ok').on('click', function() { cm.logout(); });
+
+    // Time Out Set
+    cm.setIdleTime();
+}
+
 demo.createApplicationList = function() {
-    $("#setting-panel1").remove();
-    cm.setBackahead(true);
-    var html = '<div class="panel-body"><table class="table table-striped"><tr><td>' + mg.getMsg("00047") + '</td></tr><tr><td><div id="insAppList"></div></td></tr><tr><td>' + mg.getMsg("00048") + '</td></tr><tr><td><div id="appList"></div></td></tr></div>';
-    $("#setting-panel1").append(html);
+    $("#dashboard").empty();
+    $("#dashboard").append('<div class="panel list-group toggle-panel" id="toggle-panel1"></div>');
+    var html = '<div class="panel-body" id="app-panel"><table class="table table-striped"><tr><td>' + i18next.t("Installed") + '</td></tr><tr><td><div id="insAppList1"></div></td></tr><tr><td>' + i18next.t("ApplicationList") + '</td></tr><tr><td><div id="appList1"></div></td></tr></div>';
+    $("#dashboard").append(html);
     // install application list
     cm.getBoxList().done(function(data) {
         var insAppRes = data.d.results;
         insAppRes.sort(function(val1, val2) {
             return (val1.Name < val2.Name ? 1 : -1);
         })
-        st.insAppList = new Array();
-        st.insAppBoxList = new Array();
+        am.insAppList = new Array();
+        am.insAppBoxList = new Array();
 
         if (demoSession.insApp) {
             for (var i in insAppRes) {
                 var schema = insAppRes[i].Schema;
                 if (schema && schema.length > 0) {
-                    st.insAppList.push(schema);
-                    st.insAppBoxList.push(insAppRes[i].Name);
+                    am.insAppList.push(schema);
+                    am.insAppBoxList.push(insAppRes[i].Name);
                 }
             }
-            st.dispInsAppListSetting();
+            am.dispInsAppListSetting();
         }
 
         // application list
         st.getApplicationList().done(function(data) {
-            st.dispApplicationList(data);
-            $(".setting-menu").toggleClass('slide-on');
-            cm.setTitleMenu(mg.getMsg("00039"), true);
+            am.dispApplicationList(data);
         }).fail(function(data) {
             alert(data);
         });
@@ -307,9 +427,42 @@ demo.execBarInstall = function() {
             st.dispApplicationList(data);
             $("#modal-confirmation").modal("hide");
             cm.moveBackahead(true);
-            demo.showModal('#modal-installed-start');
         }).fail(function(data) {
             alert(data);
         });
+    });
+};
+
+demo.execApp = function(schema,boxName) {
+    var childWindow = window.open('about:blank');
+    $.ajax({
+        type: "GET",
+        url: schema + "__/launch.json",
+        headers: {
+            'Authorization':'Bearer ' + cm.user.access_token,
+            'Accept':'application/json'
+        }
+    }).done(function(data) {
+        var launchObj = data.personal;
+        var launch = launchObj.web;
+        var target = cm.user.cellUrl + boxName;
+        cm.refreshTokenAPI().done(function(data) {
+            var url = launch;
+            url += '#target=' + target;
+            url += '&token=' + data.access_token;
+            url += '&ref=' + data.refresh_token;
+            url += '&expires=' + data.expires_in;
+            url += '&refexpires=' + data.refresh_token_expires_in;
+            childWindow.location.href = url;
+            childWindow = null;
+            if (launch.indexOf('MyBoard')) {
+                demoSession.sideMenu = true;
+                sessionStorage.setItem("demoSession", JSON.stringify(demoSession));
+                demo.showModal('#modal-logout-start');
+            }
+        });
+    }).fail(function(data) {
+        childWindow.close();
+        childWindow = null;
     });
 };

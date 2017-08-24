@@ -1,6 +1,18 @@
 var cm = {};
 cm.imgBinaryFile = null;
 cm.user = JSON.parse(sessionStorage.getItem("sessionData"));
+
+// Logout
+cm.logout = function() {
+  sessionStorage.setItem("sessionData", null);
+  var mode = sessionStorage.getItem("mode");
+  if (mode) {
+      location.href = "./login.html?mode=" + mode;
+  } else {
+      location.href = "./login.html";
+  }
+};
+
 if (!cm.user) {
   //location.href = "./login.html";
   cm.logout();
@@ -9,8 +21,8 @@ cm.user.nowPage = 0;
 cm.user.nowTitle = {};
 cm.user.settingNowPage = 0;
 cm.user.settingNowTitle = {};
-cm.notImage = "https://demo.personium.io/HomeApplicationForBiz/__/icons/profile_image.png";
-cm.notAppImage = "https://demo.personium.io/HomeApplicationForBiz/__/icons/no_app_image.png";
+cm.notImage = "https://demo.personium.io/HomeApplication/__/icons/profile_image.png";
+cm.notAppImage = "https://demo.personium.io/HomeApplication/__/icons/no_app_image.png";
 
 //Default timeout limit - 60 minutes.
 cm.IDLE_TIMEOUT =  3600000;
@@ -37,12 +49,13 @@ cm.createProfileHeaderMenu = function() {
     html += '</div>';
     html += '<div class="header-body">';
     html += '<div id="tProfileDisplayName" class="sizeBody">' + cm.user.profile.DisplayName + '</div>';
-    html += '<div class="sizeCaption">' + mg.getMsg("00028") + ': ' + cm.user.userName +  '</div>';
+    html += '<div id="accountTitle" class="sizeCaption" data-i18n="AccountTitle"></div>';
     html += '</div>';
     html += '<a href="#" onClick="cm.toggleSlide();">';
-    html += '<img src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_menu.png">';
+    html += '<img src="https://demo.personium.io/HomeApplication/__/icons/ico_menu.png">';
     html += '</a>';
     $(".profile-menu").html(html);
+    $('#accountTitle').attr("data-i18n-options", ["{ \"title\": \"", cm.user.userName, "\" }"].join(''));
 
     // Processing when resized
     $(window).on('load resize', function(){
@@ -95,7 +108,7 @@ cm.createTitleHeader = function(settingFlg, menuFlg) {
 
     var menuHtml = '';
     if (menuFlg) {
-        menuHtml = '<a href="#" onClick="cm.toggleSlide();"><img src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_menu.png"></a>';
+        menuHtml = '<a href="#" onClick="cm.toggleSlide();"><img src="https://demo.personium.io/HomeApplication/__/icons/ico_menu.png"></a>';
     }
 
     var html = '<div class="col-xs-1" id="' + backMenuId + '"></div>';
@@ -128,17 +141,17 @@ cm.createSettingArea = function() {
     html += '<div id="dvTextConfirmation"></div>';
     html += '</div>';
     html += '<div class="modal-footer">';
-    html += '<button type="button" class="btn btn-default" data-dismiss="modal">' + mg.getMsg("00045") + '</button>';
-    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-edit-relconfirm-ok" style="display:none">' + mg.getMsg("00003") + '</button>';
-    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-edit-accconfirm-ok" style="display:none">' + mg.getMsg("00003") + '</button>';
-    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-acclinkrole-ok" style="display:none">' + mg.getMsg("00004") + '</button>';
-    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-role-ok" style="display:none">' + mg.getMsg("00004") + '</button>';
-    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-account-ok" style="display:none">' + mg.getMsg("00004") + '</button>';
-    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-relation-ok" style="display:none">' + mg.getMsg("00004") + '</button>';
-    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-rellinkrole-ok" style="display:none">' + mg.getMsg("00004") + '</button>';
-    html += '<button type="button" class="btn btn-primary" id="b-del-extcell-ok" style="display:none">' + mg.getMsg("00004") + '</button>';
-    html += '<button type="button" class="btn btn-primary" id="b-del-extcelllinkrole-ok" style="display:none">' + mg.getMsg("00004") + '</button>';
-    html += '<button type="button" class="btn btn-primary" id="b-del-extcelllinkrelation-ok" style="display:none">' + mg.getMsg("00004") + '</button>';
+    html += '<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="Cancel"></button>';
+    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-edit-relconfirm-ok" style="display:none" data-i18n="Edit"></button>';
+    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-edit-accconfirm-ok" style="display:none" data-i18n="Edit"></button>';
+    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-acclinkrole-ok" style="display:none" data-i18n="Del"></button>';
+    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-role-ok" style="display:none" data-i18n="Del"></button>';
+    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-account-ok" style="display:none" data-i18n="Del"></button>';
+    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-relation-ok" style="display:none" data-i18n="Del"></button>';
+    html += '<button type="button" class="btn btn-primary text-capitalize" id="b-del-rellinkrole-ok" style="display:none" data-i18n="Del"></button>';
+    html += '<button type="button" class="btn btn-primary" id="b-del-extcell-ok" style="display:none" data-i18n="Del"></button>';
+    html += '<button type="button" class="btn btn-primary" id="b-del-extcelllinkrole-ok" style="display:none" data-i18n="Del"></button>';
+    html += '<button type="button" class="btn btn-primary" id="b-del-extcelllinkrelation-ok" style="display:none" data-i18n="Del"></button>';
     html += '<button type="button" class="btn btn-primary" id="b-ins-bar-ok" style="display:none">OK</button>';
     html += '</div>';
     html += '</div>';
@@ -225,31 +238,24 @@ cm.moveBackahead = function(flg) {
 
 // create side menu
 cm.createSideMenu = function() {
-    var itemName = {};
-    itemName.EditProf = mg.getMsg("00010");
-    itemName.ChgPass = mg.getMsg("00011");
-    itemName.Logout = mg.getMsg("00012");
-    itemName.DispName = mg.getMsg("00013");
-    itemName.Description = mg.getMsg("00014");
-    itemName.Photo = mg.getMsg("00015");
-    itemName.Relogin = mg.getMsg("00016");
-
     var html = '<div class="slide-menu">';
     html += '<nav class="slide-nav">';
     html += '<ul>';
 
     // Menu Title
-    html += '<li class="menu-title">' + mg.getMsg("00026") + '</li>';
+    html += '<li class="menu-title" data-i18n="Menu"></li>';
     // profile edit
-    html += '<li><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-edit-profile">' + itemName.EditProf + '</a></li>';
-    html += '<li class="menu-separator"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-change-password">' + itemName.ChgPass + '</a></li>';
+    html += '<li><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-edit-profile" data-i18n="EditProfile"></a></li>';
+    html += '<li class="menu-separator"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-change-password" data-i18n="ChangePass"></a></li>';
     // setting menu
-    html += '<li><a class="allToggle" id="accountToggle" href="#">' + mg.getMsg("00028") + '</a></li>';
-    html += '<li><a class="allToggle" id="applicationToggle" href="#">' + mg.getMsg("00039") + '</a></li>';
-    html += '<li><a class="allToggle" id="roleToggle" href="#">' + mg.getMsg("00032") + '</a></li>';
-    html += '<li class="menu-separator"><a class="allToggle" id="relationToggle" href="#">' + mg.getMsg("00033") + '</a></li>';
+    html += '<li><a class="allToggle" id="accountToggle" href="#" data-i18n="Account"></a></li>';
+    html += '<li><a class="allToggle" id="applicationToggle" href="#" data-i18n="Application"></a></li>';
+    html += '<li><a class="allToggle" id="roleToggle" href="#" data-i18n="Role"></a></li>';
+    html += '<li class="menu-separator"><a class="allToggle" id="relationToggle" href="#" data-i18n="Relation"></a></li>';
+    // change language
+    html += '<li class="menu-separator"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-chgLng" data-i18n="ChangeLng"></a></li>'
     // log out
-    html += '<li class="menu-separator"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-logout">' + itemName.Logout + '</a></li>';
+    html += '<li class="menu-separator"><a class="allToggle" href="#" data-toggle="modal" data-target="#modal-logout" data-i18n="Logout"></a></li>';
 
     html += '</ul>';
     html += '</nav>';
@@ -266,28 +272,30 @@ cm.createSideMenu = function() {
     html += '<div class="modal-content">';
     html += '<div class="modal-header login-header">';
     html += '<button type="button" class="close" data-dismiss="modal">×</button>';
-    html += '<h4 class="modal-title">' + itemName.EditProf + '</h4>';
+    html += '<h4 class="modal-title" data-i18n="EditProfile"></h4>';
     html += '</div>';
     html += '<div class="modal-body">';
-    html += '<div id="dvDisplayName">' + itemName.DispName + '</div>';
+    html += '<div id="dvDisplayName" data-i18n="DisplayName"></div>';
     html += '<div id="dvTextDisplayName">';
     html += '<input type="text" id="editDisplayName" onblur="cm.editDisplayNameBlurEvent();">';
     html += '</div>';
     html += '<span class="popupAlertArea" style="color:red">';
     html += '<aside id="popupEditDisplayNameErrorMsg"></aside>';
     html += '</span>';
-    html += '<div id="dvDescription">' + itemName.Description + '</div>';
+    html += '<div id="dvDescription" data-i18n="Description"></div>';
     html += '<div id="dvTextDescription">';
     html += '<textarea onblur="cm.editDescriptionBlurEvent();" name="" cols="" rows=""  id="editDescription"></textarea>';
     html += '</div>';
     html += '<span style="padding-top: 3px;height:11px;color:red;">';
     html += '<aside id="popupEditDescriptionErrorMsg"></aside>';
     html += '</span>';
-    html += '<div id="dvPhoto">' + itemName.Photo + '</div>';
+    html += '<div id="dvPhoto" data-i18n="ProfileImage"></div>';
     html += '<div id="dvBrowseButtonSection">';
-    html += '<input type="file" class="fileUpload" onchange="cm.attachFile(\'popupEditUserPhotoErrorMsg\', \'editImgFile\');" id="editImgFile">';
+    html += '<input type="file" class="fileUpload" onchange="cm.attachFile(\'popupEditUserPhotoErrorMsg\', \'editImgFile\');" id="editImgFile" style="display: none">';
+    html += '<button class="btn btn-primary" id="editImgButton" type="button" data-i18n="SelectFile"></button>';
+    html += '<label id="editImgLbl" style="margin-left:10px;"></label>';
     html += '</div>';
-    html += '<div id="dvBoxProfileImage">';
+    html += '<div id="dvBoxProfileImage" style="margin-top: 10px;">';
     html += '<figure id="figEditCellProfile" class="boxProfileImage">';
     html += '<img class="image-circle-large" style="margin: auto;" id="idImgFile" src="#" alt="image" />';
     html += '</figure>';
@@ -297,11 +305,11 @@ cm.createSideMenu = function() {
     html += '</span>';
     html += '</div>';
     html += '<div class="modal-footer">';
-    html += '<button type="button" class="btn btn-default" data-dismiss="modal">' + mg.getMsg("00045") + '</button>';
-    html += '<button type="button" class="btn btn-primary" id="b-edit-profile-ok">' + mg.getMsg("00044") + '</button>';
+    html += '<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="Cancel"></button>';
+    html += '<button type="button" class="btn btn-primary" id="b-edit-profile-ok" data-i18n="Register"></button>';
     html += '</div></div></div></div>';
     var modal = $(html);
-    $(document.body).append(modal);
+    $(document.body).append(modal).localize();
 
     // Change Password
     html = '<div id="modal-change-password" class="modal fade" role="dialog">' +
@@ -310,17 +318,17 @@ cm.createSideMenu = function() {
            '<div class="modal-content">' +
            '<div class="modal-header login-header">' +
            '<button type="button" class="close" data-dismiss="modal">×</button>' +
-           '<h4 class="modal-title">' + itemName.ChgPass + '</h4>' +
+           '<h4 class="modal-title" data-i18n="ChangePass"></h4>' +
            '</div>' +
            '<div class="modal-body">' +
-           '<input type="password" placeholder="' + mg.getMsg("I0005") + '" id="pNewPassword">' +
+           '<input type="password" data-i18n="[placeholder]newPassPlaceHolder" id="pNewPassword">' +
            '<span id="changeMessage" style="color:red"></span>' +
-           '<input type="password" placeholder="' + mg.getMsg("I0003") + '" id="pConfirm">' +
+           '<input type="password" data-i18n="[placeholder]confirmNewPass" id="pConfirm">' +
            '<span id="confirmMessage" style="color:red"></span>' +
            '</div>' +
            '<div class="modal-footer">' +
-           '<button type="button" class="btn btn-default" data-dismiss="modal">' + mg.getMsg("00045") + '</button>' +
-           '<button type="button" class="btn btn-primary" id="b-change-password-ok" disabled>' + mg.getMsg("00046") + '</button>' +
+           '<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="Cancel"></button>' +
+           '<button type="button" class="btn btn-primary" id="b-change-password-ok" data-i18n="Update" disabled></button>' +
            '</div></div></div></div>';
 
     modal = $(html);
@@ -331,13 +339,35 @@ cm.createSideMenu = function() {
            '<div class="modal-dialog">' +
            '<div class="modal-content">' +
            '<div class="modal-header login-header">' +
-           '<h4 class="modal-title">' + itemName.Relogin + '</h4>' +
+           '<h4 class="modal-title" data-i18n="ReLogin"></h4>' +
            '</div>' +
-           '<div class="modal-body">' +
-           mg.getMsg("I0001") +
+           '<div class="modal-body" data-i18n="successChangePass">' +
            '</div>' +
            '<div class="modal-footer">' +
            '<button type="button" class="btn btn-primary" id="b-relogin-ok" >OK</button>' +
+           '</div></div></div></div>';
+    modal = $(html);
+    $(document.body).append(modal);
+
+    // Change Language
+    html = '<div id="modal-chgLng" class="modal fade" role="dialog">' +
+           '<div class="modal-dialog">' +
+           '<div class="modal-content">' +
+           '<div class="modal-header login-header">' +
+           '<button type="button" class="close" data-dismiss="modal">×</button>' +
+           '<h4 class="modal-title" data-i18n="ChangeLng"></h4>' +
+           '</div>' +
+           '<div class="modal-body">' +
+           '<span data-i18n="changeLanguageDescription"></span>' +
+           '<select class="form-control" id="selectLng">' +
+           '<option value="en" data-i18n="English"></option>' +
+           '<option value="ja" data-i18n="Japanese"></option>' +
+           '</select>' +
+           '<span id="selectLngMessage" style="color:red"></span>' +
+           '</div>' +
+           '<div class="modal-footer">' +
+           '<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="Cancel"></button>' +
+           '<button type="button" class="btn btn-primary" id="b-setlng-ok" data-i18n="Setup"></button>' +
            '</div></div></div></div>';
     modal = $(html);
     $(document.body).append(modal);
@@ -348,13 +378,11 @@ cm.createSideMenu = function() {
            '<div class="modal-content">' +
            '<div class="modal-header login-header">' +
            '<button type="button" class="close" data-dismiss="modal">×</button>' +
-           '<h4 class="modal-title">' + itemName.Logout + '</h4>' +
+           '<h4 class="modal-title" data-i18n="Logout"></h4>' +
            '</div>' +
-           '<div class="modal-body">' +
-           mg.getMsg("I0002") +
-           '</div>' +
+           '<div class="modal-body" data-i18n="logoutConfirm"></div>' +
            '<div class="modal-footer">' +
-           '<button type="button" class="btn btn-default" data-dismiss="modal">' + mg.getMsg("00045") + '</button>' +
+           '<button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="Cancel"></button>' +
            '<button type="button" class="btn btn-primary" id="b-logout-ok" >OK</button>' +
            '</div></div></div></div>';
     modal = $(html);
@@ -365,11 +393,9 @@ cm.createSideMenu = function() {
            '<div class="modal-dialog">' +
            '<div class="modal-content">' +
            '<div class="modal-header login-header">' +
-           '<h4 class="modal-title">' + itemName.Relogin + '</h4>' +
+           '<h4 class="modal-title" data-i18n="ReLogin"></h4>' +
            '</div>' +
-           '<div class="modal-body">' +
-           mg.getMsg("W0001") +
-           '</div>' +
+           '<div class="modal-body" data-i18n="expiredSession"></div>' +
            '<div class="modal-footer">' +
            '<button type="button" class="btn btn-primary" id="b-session-relogin-ok" >OK</button>' +
            '</div></div></div></div>';
@@ -397,6 +423,19 @@ cm.createSideMenu = function() {
 //        $(".overlay").removeClass('overlay-on');
 //        $(".slide-menu").removeClass('slide-on');
         cm.toggleSlide();
+    });
+    $("#b-setlng-ok").on('click', function() {
+        $("#selectLng option:selected").each(function(index, option) {
+            i18next.changeLanguage($(option).val())
+            updateContent();
+            $("#modal-chgLng").modal("hide");
+        });
+    });
+    $("#editImgButton,#editImgLbl").on('click', function() {
+        $("#editImgFile").click();
+    });
+    $("#modal-chgLng").on("show.bs.modal", function () {
+        $("#selectLng").val(i18next.language);
     });
 
     // Time Out Set
@@ -427,23 +466,32 @@ cm.toggleSlide = function() {
 // true: Settings false: Default
 cm.createBackMenu = function(moveUrl, flg) {
     if (flg) {
-        var html = '<a href="#" class="allToggle prev-icon" style="float:left;" onClick="cm.moveBackahead(true);return false;"><img id="imSettingBack" src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_back.png" alt="user"></a>';
+        var html = '<a href="#" class="allToggle prev-icon" style="float:left;" onClick="cm.moveBackahead(true);return false;"><img id="imSettingBack" src="https://demo.personium.io/HomeApplication/__/icons/ico_back.png" alt="user"></a>';
         $("#settingBackMenu").html(html);
     } else {
-        var html = '<a href="#" class="allToggle" style="float:left;" onClick="cm.moveBackahead();return false;"><img id="imBack" src="https://demo.personium.io/HomeApplicationForBiz/__/icons/ico_back.png" alt="user"></a>';
+        var html = '<a href="#" class="allToggle" style="float:left;" onClick="cm.moveBackahead();return false;"><img id="imBack" src="https://demo.personium.io/HomeApplication/__/icons/ico_back.png" alt="user"></a>';
         $("#backMenu").html(html);
     }
     cm.user.prevUrl = moveUrl;
 }
 
+// true: SettingTitle false: MainTitle
 cm.setTitleMenu = function(title, flg) {
     if (flg) {
-        $("#settingTitleMenu").html('<p class="ellipsisText">' + title + '</p>');
+        if (i18next.exists(title)) {
+            $("#settingTitleMenu").html('<p class="ellipsisText" data-i18n="' + title + '"></p>').localize();
+        } else {
+            $("#settingTitleMenu").html('<p class="ellipsisText">' + title + '</p>');
+        }
         var titles = cm.user.settingNowTitle;
         titles[cm.user.settingNowPage] = title;
         cm.user.settingNowTitle = titles;
     } else {
-        $("#titleMenu").html('<p  class="ellipsisText">' + title + '</p>');
+        if (i18next.exists(title)) {
+            $("#titleMenu").html('<p class="ellipsisText" data-i18n="' + title + '"></p>').localize();
+        } else {
+            $("#titleMenu").html('<p class="ellipsisText">' + title + '</p>');
+        }
         var titles = cm.user.nowTitle;
         titles[cm.user.nowPage] = title;
         cm.user.nowTitle = titles;
@@ -475,7 +523,7 @@ cm.dispRoleList = function(json, id, multiFlag) {
   }
 
   if (!multiFlag) {
-      $("#" + id).append('<option value="">' + mg.getMsg("I0021") + '</option>');
+      $("#" + id).append('<option value="" data-i18n="selectRole"></option>');
   }
   for (var i in results) {
     var objRole = json.d.results[i];
@@ -499,7 +547,7 @@ cm.dispAssignRole = function(type, flg) {
     $("#" + panelId + "-panel3").empty();
     cm.setBackahead(flg);
     var html = '<div class="panel-body">';
-    html += '<div id="dvAddAccLinkRole' + settingId + '">' + mg.getMsg("I0014") + '</div>';
+    html += '<div id="dvAddAccLinkRole' + settingId + '" data-i18n="selectRoleAssign"></div>';
     html += '<div id="dvSelectAddAccLinkRole' + settingId + '" style="margin-bottom: 10px;">';
     html += '<select class="form-control" name="" id="ddlLinkRoleList' + settingId + '" onChange="cm.changeRoleSelect(\'' + settingId + '\');"></select>';
     html += '</div>';
@@ -516,16 +564,16 @@ cm.dispAssignRole = function(type, flg) {
             html += 'sg.restAddExtCellLinkRole(true);';
             break;
     }
-    html += '">' + mg.getMsg("00049") + '</button>';
+    html += '" data-i18n="Assign"></button>';
     html += '</div></div>';
-    $("#" + panelId + "-panel3").append(html);
+    $("#" + panelId + "-panel3").append(html).localize();
     cm.getRoleList().done(function(data) {
         cm.dispRoleList(data, "ddlLinkRoleList" + settingId, false);
     });
     
     $("#" + panelId + "-panel3").toggleClass('slide-on');
     $("#" + panelId + "-panel2").toggleClass('slide-on-holder');
-    cm.setTitleMenu(mg.getMsg("00005"), flg);
+    cm.setTitleMenu("AssigningRoles", flg);
 };
 cm.changeRoleSelect = function(settingId) {
     var value = $("#ddlLinkRoleList" + settingId + " option:selected").val();
@@ -572,7 +620,7 @@ cm.dispRelationList = function(json, id, multiFlag) {
   }
 
   if (!multiFlag) {
-      $("#" + id).append('<option value="">' + mg.getMsg("I0022") + '</option>');
+      $("#" + id).append('<option value="" data-i18n="selectRelation"></option>');
   }
 
   for (var i in results) {
@@ -595,6 +643,7 @@ cm.populateProfileEditData = function() {
   document.getElementById("popupEditDescriptionErrorMsg").innerHTML = "";
   document.getElementById("popupEditUserPhotoErrorMsg").innerHTML = "";
   
+  $("#editImgLbl").html("");
   $('#editImgFile').replaceWith($('#editImgFile').clone());
   if (cm.user.profile.Image) {
     $("#idImgFile").attr('src', cm.user.profile.Image);
@@ -633,6 +682,7 @@ cm.attachFile = function(popupImageErrorId, fileDialogId) {
   if (file) {
     var imageFileSize = file.size / 1024;
     if (cm.validateFileType(cm.fileName, imageFileSize, popupImageErrorId)) {
+      $("#editImgLbl").html(ut.getName(cm.fileName));
       cm.getAsBinaryString(file);
     }
   }
@@ -684,10 +734,10 @@ cm.charCheck = function(check) {
   if (passLen !== 0) {
     bool = true;
     if (passLen < 6 || passLen > 36) {
-      msg = "Please enter between 6 to 32 characters.";
+      msg = i18next.t("pleaseBetweenCharacter");
       bool = false;
     } else if (check.val().match(/[^0-9a-zA-Z_-]+/)) {
-      msg = "Please enter Character Type(Half Size Alphanumeric, '-', '_')";
+      msg = i18next.t("pleaseCharacterType");
       bool = false;
     }
 
@@ -714,61 +764,44 @@ cm.validateFileType = function(filePath, imageSize, popupImageErrorId) {
 		return false;
 	}
 };
-cm.validateDisplayName = function(displayName, displayNameSpan,txtID) {
+cm.validateDisplayName = function(displayName, displayNameSpan) {
 	var MINLENGTH = 1;
-	var MAXLENGTH = 128;
-	var letters = /^[一-龠ぁ-ゔ[ァ-ヴー々〆〤0-9a-zA-Z-_\s]+$/;
-	var specialchar = /^[-_\s]*$/;
-	var allowedLetters = /^[0-9a-zA-Z-_\s]+$/;
-	var lenDisplayName = displayName.length;
-	//this.removeStatusIcons(txtID);
-        document.getElementById(displayNameSpan).innerHTML = "";
-	if(lenDisplayName < MINLENGTH || displayName == undefined || displayName == null || displayName == "") {
-		document.getElementById(displayNameSpan).innerHTML =  mg.getMsg("E0003");
-		//this.showErrorIcon(txtID);
-		//uCellProfile.spinner.stop();
-		return false;
-	} else if (lenDisplayName >= MAXLENGTH) {
-		document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0004");
-		//uCellProfile.spinner.stop();
-		//this.showErrorIcon(txtID);
-		return false;
-	} else if (lenDisplayName != 0 && ! (displayName.match(letters))){
-		document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0005");
-		//this.showErrorIcon(txtID);
-		return false;
-	//} else if (lenDisplayName != 0 && !(displayName.match(allowedLetters))) {
-	//	document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
-	//	//this.showErrorIcon(txtID);
-	//	return false;
-	} else if(lenDisplayName != 0 && (specialchar.toString().indexOf(displayName.substring(0,1)) >= 0)){
-		document.getElementById(displayNameSpan).innerHTML = mg.getMsg("E0006");
-		//this.showErrorIcon(txtID);
-		//uCellProfile.spinner.stop();
-		return false;
+        var lenDisplayName = displayName.length;
+        if(lenDisplayName < MINLENGTH || displayName == undefined || displayName == null || displayName == "") {
+            $("#" + displayNameSpan).html(i18next.t("pleaseEnterName"));
+            return false;
 	}
-	//this.showValidValueIcon(txtID);
-	return true;
+
+	var MAXLENGTH = 128;
+        $("#" + displayNameSpan).html("");
+        if (lenDisplayName > MAXLENGTH) {
+            $("#" + displayNameSpan).html(i18next.t("errorValidateNameLength"));
+            return false;
+        }
+        return true;
 };
 cm.validateDescription = function(descriptionDetails, descriptionSpan) {
 	var isValidDescription = true;
 	var lenDescription = descriptionDetails.length;
 	if (lenDescription > 51200) {
 		isValidDescription = false;
-		document.getElementById(descriptionSpan).innerHTML = mg.getMsg("E0021");
+		document.getElementById(descriptionSpan).innerHTML = i18next.t("errorValidateMaxLengthOver");
 	}
 	return isValidDescription;
 };
 
-// Logout
-cm.logout = function() {
-  sessionStorage.setItem("sessionData", null);
-  var mode = sessionStorage.getItem("mode");
-  if (mode) {
-      location.href = "./login.html?mode=" + mode;
-  } else {
-      location.href = "./login.html";
-  }
+cm.i18nAddProfile = function(lng , ns, boxName, json) {
+    if (json.DisplayName[lng]) {
+        i18next.addResource(lng, ns, boxName + "_DisplayName", json.DisplayName[lng]);
+    } else {
+        i18next.addResource(lng, ns, boxName + "_DisplayName", json.DisplayName);
+    }
+
+    if (json.Description[lng]) {
+        i18next.addResource(lng, ns, boxName + "_Description", json.Description[lng]);
+    } else {
+        i18next.addResource(lng, ns, boxName + "_Description", json.Description);
+    }
 };
 
 // This method checks idle time
@@ -805,7 +838,7 @@ cm.changePassCheck = function(newpass, confirm) {
     $('#confirmMessage').html("");
     cm.changePass(newpass);
   } else {
-    $('#confirmMessage').html(mg.getMsg("E0002"));
+    $('#confirmMessage').html(i18next.t("passwordNotMatch"));
   }
 };
 
@@ -930,7 +963,6 @@ cm.retrieveCollectionAPIResponse = function(json) {
     type: "PUT",
     url: cm.user.cellUrl + '__/profile.json',
     data: JSON.stringify(json),
-    dataType: 'json',
     headers: {'Accept':'application/json',
               'Authorization':'Bearer ' + cm.user.access_token}
   }).done(function(data) {
@@ -993,6 +1025,7 @@ cm.execApp = function(schema,boxName) {
         cm.appGetTargetToken(schema, launchObj.appTokenId, launchObj.appTokenPw).done(function(appToken) {
             cm.appRefreshTokenAPI(schema, appToken.access_token).done(function(refTokenApp) {
                 var url = launch;
+                url += '?lng=' + i18next.language;
                 url += '#target=' + target;
                 url += '&token=' + refTokenApp.access_token;
                 url += '&ref=' + refTokenApp.refresh_token;
@@ -1101,12 +1134,12 @@ function testAPI(evt) {
 function testAPI2() {
     $.ajax({
             //type: "GET",
-            //url: 'https://demo.personium.io/HomeApplicationForBiz/io_personium_demo_app-myboard',
+            //url: 'https://demo.personium.io/HomeApplication/io_personium_demo_app-myboard',
             //headers: {
             //    'Authorization':'Bearer ' + cm.user.access_token
             //}
             type: "PROPFIND",
-            url: 'https://demo.personium.io/HomeApplicationForBiz/io_personium_demo_app-myboard/MyBoardBox/my-board.json',
+            url: 'https://demo.personium.io/HomeApplication/io_personium_demo_app-myboard/MyBoardBox/my-board.json',
             headers: {
                 'Authorization':'Bearer ' + cm.user.access_token,
                 'Depth': 1
